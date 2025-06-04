@@ -1,0 +1,77 @@
+.home-container {
+  background-color: #25204e;
+  min-height: 100vh;
+  padding: 5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-title {
+  font-size: 3rem;
+  color: #4193eb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 1rem;
+}
+
+.home-description {
+  font-size: 1.2rem;
+  max-width: 600px;
+  color: #e0e0e0;
+}
+
+.home-separator {
+  width: 80%;
+  max-width: 500px;
+  border-top: 2px solid white;
+  margin-top: 2rem;
+}
+
+.home-btn {
+  background-color: #4193eb;
+  color: white;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.home-btn:hover {
+  background-color: #0044ff;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.home-title {
+  font-size: 3rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+.typewriter {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  animation: typing 2.5s steps(14, end) forwards;
+  font-weight: bold;
+  color: #4193eb;
+  margin-left: 0.4rem;
+  letter-spacing: normal;
+}
+
+/* Animación del tipeo SIN cursor */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 11.5ch; /* "Clínica Online" tiene 14 caracteres */
+  }
+}
+
