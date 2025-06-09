@@ -20,14 +20,19 @@
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
       <ul class="navbar-nav ms-0 mb-2 mb-lg-0 d-flex align-items-center">
         <li class="nav-item me-2">
-          <button class="btn btn-login" routerLink="/login" routerLinkActive="active">
+          <button *ngIf="!isLoggedIn" class="btn btn-login" routerLink="/login" routerLinkActive="active">
             Iniciar Sesión
           </button>
         </li>
 
         <li class="nav-item me-2">
-          <button class="btn btn-register" routerLink="/registro" routerLinkActive="active">
+          <button *ngIf="!isLoggedIn" class="btn btn-register" routerLink="/registro" routerLinkActive="active">
             Registrarse
+          </button>
+        </li>
+         <li class="nav-item me-2">
+          <button *ngIf="isLoggedIn" class="btn btn-register" (click)="cerrarSesion()">
+            Cerrar sesión
           </button>
         </li>
       </ul>

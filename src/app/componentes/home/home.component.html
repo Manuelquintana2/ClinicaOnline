@@ -3,7 +3,6 @@
   Bienvenido a <span class="typewriter">Clínica Online</span>
 </h1>
 
-
   <p class="home-description">
     En nuestra clínica digital, cuidamos tu salud estés donde estés. Brindamos atención médica profesional, turnos online y seguimiento personalizado.
   </p>
@@ -12,5 +11,7 @@
 
   <div class="home-buttons d-flex justify-content-center gap-3 mt-4">
     <button class="btn home-btn">Sobre Mí</button>
+    <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin/seccion-usuarios">Sección Usuarios</button>
   </div>
+
 </div>

@@ -16,15 +16,43 @@ export class LoginComponent {
 
   constructor(private auth: AuthService, private router: Router) {}
 
+  errorMessage: string | null = null;
+
   async onSubmit() {
+    this.errorMessage = null;
     try {
-      await this.auth.logIn(this.email, this.password);
-      this.router.navigate(['/home']); // Redirige al home o dashboard
+      const result = await this.auth.logIn(this.email, this.password);
+
+      if (!result.success) {
+        console.log(result.message)
+        // Manejar errores según el mensaje o código que venga
+        switch (result.message) {
+          case 'Email o contraseña incorrectos.':
+            this.errorMessage = 'Email o contraseña incorrectos.';
+            break;
+          case 'Debe verificar su correo antes de ingresar.':
+            this.errorMessage = 'Debe verificar su correo antes de ingresar.';
+            break;
+          case 'No se pudo obtener el perfil del usuario.':
+            this.errorMessage = 'No se pudo obtener el perfil del usuario.';
+            break;
+          case 'El especialista aún no está habilitado para acceder. Espere aprobación del administrador.':
+            this.errorMessage = 'El especialista aún no está habilitado para acceder. Espere aprobación del administrador.';
+            break;
+          default:
+            this.errorMessage = 'Error desconocido, intenta nuevamente.';
+            break;
+        }
+        return;
+      }
+      // Login exitoso, redirigir
+      this.router.navigate(['/home']);
     } catch (error) {
-      alert('Credenciales inválidas');
       console.error(error);
+      this.errorMessage = 'Error inesperado. Intenta más tarde.';
     }
   }
+
 
   fillUser(email: string, password: string) {
     this.email = email;

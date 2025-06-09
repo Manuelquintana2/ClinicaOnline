@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,17 +7,23 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-
+import Swal from 'sweetalert2';
 import { Especialista,Paciente } from '../../interface/users';
 import { AuthService } from '../../servicios/auth.service';
 import { v4 as uuidv4 } from 'uuid'; 
+import { EspecialidadesService } from '../../servicios/especialidades.service';
+import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-registro',
   imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'
 })
-export class RegistroComponent {
+export class RegistroComponent implements OnInit{
+  perfil: string | null = null;
+  private sub!: Subscription;
   tipoRegistro: 'paciente' | 'especialista' | null = null;
 
   especialistaImagePreview: string | null = null;
@@ -27,11 +33,13 @@ export class RegistroComponent {
   pacienteForm: FormGroup;
   especialistaForm: FormGroup;
 
-  especialidades: string[] = ['Cardiología', 'Dermatología', 'Pediatría'];
+  especialidades!: string[];
   nuevaEspecialidad: string = '';
-  mostrarInputEspecialidad: boolean = false;
 
-  constructor(private fb: FormBuilder, private auth: AuthService) {
+  constructor(private fb: FormBuilder, 
+    private auth: AuthService, 
+    private especialidadesService: EspecialidadesService,
+    private router: Router) {
     this.pacienteForm = this.fb.group({
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
@@ -49,23 +57,52 @@ export class RegistroComponent {
       apellido: ['', Validators.required],
       edad: ['', [Validators.required, Validators.min(25), Validators.max(80)]],
       dni: ['', [Validators.required, Validators.pattern(/^\d{7,8}$/)]],
-      especialidad: ['', Validators.required],
+      especialidades: [[], Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       imagen: [null, Validators.required],
     });
   }
 
+  ngOnInit() {
+    this.cargarEspecialidades();
+    // Cuando cambie el usuario (login/logout), traemos perfil
+    this.sub = this.auth.currentUser$.subscribe(async user => {
+      if (user) {
+        const data = await this.auth.getUserProfile();
+        this.perfil = data?.perfil ?? null;
+      } else {
+        this.perfil = null;
+      }
+    });
+  }
+  async cargarEspecialidades() {
+    try {
+      this.especialidades = await this.especialidadesService.getEspecialidades();
+    } catch (err) {
+      console.error('Error al cargar especialidades', err);
+    }
+  }
+  
   seleccionar(tipo: 'paciente' | 'especialista') {
     this.tipoRegistro = tipo;
   }
 
-  agregarEspecialidad() {
-    if (this.nuevaEspecialidad.trim()) {
-      this.especialidades.push(this.nuevaEspecialidad.trim());
-      this.especialistaForm.get('especialidad')?.setValue(this.nuevaEspecialidad.trim());
-      this.nuevaEspecialidad = '';
-      this.mostrarInputEspecialidad = false;
+  async agregarEspecialidad() {
+    const nueva = this.especialistaForm.get('nuevaEspecialidad')?.value.trim();
+    if (nueva && !this.especialidades.includes(nueva)) {
+      try {
+        await this.especialidadesService.addEspecialidad(nueva);
+        await this.cargarEspecialidades();
+
+        const control = this.especialistaForm.get('especialidades');
+        const seleccionadas = control?.value || [];
+        control?.setValue([...seleccionadas, nueva]);
+
+        this.especialistaForm.get('nuevaEspecialidad')?.reset();
+      } catch (error) {
+        console.error('Error al agregar especialidad', error);
+      }
     }
   }
 
@@ -136,7 +173,14 @@ export class RegistroComponent {
       if (insertError) {
         console.error('Error al insertar en usuarios:', insertError);
       } else {
+          Swal.fire({
+          icon: 'success',
+          title: '¡Registro exitoso!',
+          text: 'Paciente registrado correctamente.',
+          confirmButtonColor: '#4193eb',
+        });
         console.log('Paciente registrado con éxito:', paciente);
+        this.router.navigate(["/login"])
       }
 
     } catch (err) {
@@ -149,7 +193,7 @@ export class RegistroComponent {
       this.especialistaForm.markAllAsTouched();
       return;
     }
-    const { nombre, apellido, edad, dni, especialidad, email, password, imagen } = this.especialistaForm.value;
+    const { nombre, apellido, edad, dni, especialidades, email, password, imagen } = this.especialistaForm.value;
     try {
       const { data: authData, error: authError } = await this.auth.register(email, password);
 
@@ -175,8 +219,8 @@ export class RegistroComponent {
         dni: +dni,
         email,
         imagen_perfil: imageUrl,
-        especialidades: [especialidad],
-        esta_habilitado: false, // Default
+        especialidades,
+        esta_habilitado: this.perfil === 'admin' ? true : false,
         perfil : "especialista"
       };
 
@@ -186,7 +230,14 @@ export class RegistroComponent {
       if (insertError) {
         console.error('Error al insertar en usuarios:', insertError);
       } else {
+          Swal.fire({
+          icon: 'success',
+          title: '¡Registro exitoso!',
+          text: 'Especialista registrado correctamente.',
+          confirmButtonColor: '#4193eb',
+        });
         console.log('Especialista registrado con éxito:', especialista);
+        this.router.navigate(["/login"])
       }
 
     } catch (err) {
@@ -196,10 +247,6 @@ export class RegistroComponent {
 
   onEspecialidadChange(event: Event) {
     const target = event.target as HTMLSelectElement | null;
-    this.mostrarInputEspecialidad = target?.value === 'otra';
-    if (!this.mostrarInputEspecialidad) {
-      this.especialistaForm.get('especialidad')?.setValue(target?.value);
-    }
   }
 
 }

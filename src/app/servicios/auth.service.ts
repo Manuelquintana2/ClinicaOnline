@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { environment } from '../../enviroment/enviroment';
+import { BehaviorSubject } from 'rxjs';
+import { Especialista, Usuario } from '../interface/users';
 
 @Injectable({
   providedIn: 'root'
@@ -9,22 +11,70 @@ export class AuthService {
 
   private supabase : SupabaseClient;
 
+  private currentUserSubject = new BehaviorSubject<any | null>(null);
+
+  currentUser$ = this.currentUserSubject.asObservable();
+
   constructor() {
     this.supabase = createClient(
       environment.supabaseUrl,
       environment.supabaseAnonKey
     );
+    this.supabase.auth.getUser().then(({ data: { user } }) => {
+    this.currentUserSubject.next(user);
+    });
+    // Y nos suscribimos a cambios de estado de auth
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      this.currentUserSubject.next(session?.user ?? null);
+    });
    }
 
-   async logIn(email: string, password: string) {
-    const { data, error } = await this.supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-  
-    if (error) throw error;
-    return data;
+  async logIn(email: string, password: string) {
+    const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      const message = error.message.toLowerCase();
+
+      if (message.includes('invalid login credentials')) {
+        return { success: false, message: 'Email o contraseña incorrectos.' };
+      }
+
+      if (message.includes('email not confirmed')) {
+        return { success: false, message: 'Debe verificar su correo antes de ingresar.' };
+      }
+
+      return { success: false, message: 'Error en la autenticación. Intente nuevamente.' };
+    }
+
+    const user = data.user;
+
+    // Por si acaso, chequeo redundante
+    if (!user?.email_confirmed_at) {
+      return { success: false, message: 'Debe verificar su correo antes de ingresar.' };
+    }
+
+    // ⬇️ Verificar perfil del usuario en la base de datos
+    const { data: perfilData, error: perfilError } = await this.supabase
+      .from('usuarios_clinica')
+      .select('perfil, esta_habilitado')
+      .eq('uid', user.id)
+      .single();
+
+    if (perfilError || !perfilData) {
+      return { success: false, message: 'No se pudo obtener el perfil del usuario.' };
+    }
+
+    // ⛔ Si es especialista y no está habilitado, denegar acceso
+    if (perfilData.perfil === 'especialista' && !perfilData.esta_habilitado) {
+      return {
+        success: false,
+        message: 'El especialista aún no está habilitado para acceder. Espere aprobación del administrador.',
+      };
+    }
+
+    return { success: true, user };
   }
+
 
   async register(email: string, password: string) {
     const { data, error } = await this.supabase.auth.signUp({
@@ -53,9 +103,11 @@ export class AuthService {
     });
   }
 
-  getCurrentUser() {
-    return this.supabase.auth.getUser();
-  }
+async getCurrentUser() {
+  const { data, error } = await this.supabase.auth.getUser();
+  return data?.user || null;
+}
+
   
   getClient(): SupabaseClient {
     return this.supabase;
@@ -73,5 +125,42 @@ export class AuthService {
 
   async insertUser(user: any) {
     return await this.supabase.from('usuarios_clinica').insert(user);
+  }
+
+ async getUserProfile(): Promise<{ perfil: string } | null> {
+    const user = this.currentUserSubject.value;
+    if (!user) return null;
+    const { data, error } = await this.supabase
+      .from('usuarios_clinica')
+      .select('perfil')
+      .eq('uid', user.id)
+      .single();
+    return error ? null : data;
+  }
+
+  async getAllUsers(): Promise<Usuario[]> {
+    const { data, error } = await this.supabase
+      .from('usuarios_clinica')
+      .select('*');
+
+    if (error) {
+      console.error('Error al obtener usuarios:', error);
+      throw error;
+    }
+
+    return data as Usuario[];
+  }
+
+  // ✅ Actualizar un usuario (ej: habilitar especialista)
+  async updateUser(uid: string, updates: Partial<Especialista>) {
+    const { error } = await this.supabase
+      .from('usuarios_clinica')
+      .update(updates)
+      .eq('uid', uid);
+
+    if (error) {
+      console.error('Error al actualizar usuario:', error);
+      throw error;
+    }
   }
 }

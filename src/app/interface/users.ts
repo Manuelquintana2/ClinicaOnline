@@ -5,21 +5,19 @@ export interface Usuario {
     edad: number;
     dni: number;
     email: string;
-    imagen_perfil: string; // link al storage
+    imagen_perfil: string;
+    perfil: 'admin' | 'especialista' | "paciente" 
     lastLogin?: Date;
 }
 export interface Admin extends Usuario{
-    perfil : 'admin';
 }
 export interface Especialista extends Usuario{
-    perfil : 'especialista';
     especialidades: string[];
     esta_habilitado: boolean;
     horariosDisponibles?: Horarios;
     refToHorariosDisponibles?: string;
 }
 export interface Paciente extends Usuario{
-    perfil : 'paciente';
     obra_social: string;
     imagen_perfil_aux: string; // link al storage
 }
