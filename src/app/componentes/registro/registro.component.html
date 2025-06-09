@@ -1,0 +1,200 @@
+<div class="registro-container text-white d-flex flex-column align-items-center justify-content-center">
+  <div class="registro-box p-4 text-center" style="max-width: 600px;">
+    <h2 class="mb-4 text-celeste">Registrarse</h2>
+    <h6 class="mb-4">Crea una cuenta nueva para empezar a usar los beneficios de la clínica</h6>
+
+    <!-- Botones para elegir registro -->
+    <div class="d-flex flex-column flex-md-row gap-5 justify-content-center mb-4">
+      <button class="btn registro-btn px-5 py-4 d-flex align-items-center gap-3" (click)="seleccionar('especialista')" [class.active]="tipoRegistro === 'especialista'">
+        <i class="bi bi-clipboard-pulse fs-1"></i>
+        <span class="fs-4">Especialista</span>
+      </button>
+
+      <button class="btn registro-btn px-5 py-4 d-flex align-items-center gap-3" (click)="seleccionar('paciente')" [class.active]="tipoRegistro === 'paciente'">
+        <i class="bi bi-person-circle fs-1"></i>
+        <span class="fs-4">Paciente</span>
+      </button>
+    </div>
+
+    @if(tipoRegistro != null){
+      <h1>Registrar {{tipoRegistro}}</h1>
+    }
+
+    <!-- Formulario Paciente -->
+    <form *ngIf="tipoRegistro === 'paciente'" [formGroup]="pacienteForm" (ngSubmit)="onPacienteSubmit()" novalidate>
+      <div class="mb-3 text-start">
+        <label for="nombrePaciente" class="form-label">Nombre</label>
+        <input placeholder="Nombre" id="nombrePaciente" formControlName="nombre" type="text" class="form-control" />
+        <div *ngIf="pacienteForm.get('nombre')?.touched && pacienteForm.get('nombre')?.invalid" class="text-danger small">El nombre es requerido.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="apellidoPaciente" class="form-label">Apellido</label>
+        <input placeholder="Apellido" id="apellidoPaciente" formControlName="apellido" type="text" class="form-control" />
+        <div *ngIf="pacienteForm.get('apellido')?.touched && pacienteForm.get('apellido')?.invalid" class="text-danger small">El apellido es requerido.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="edadPaciente" class="form-label">Edad</label>
+        <input placeholder="Edad" id="edadPaciente" formControlName="edad" type="number" min="0" class="form-control" />
+        <div *ngIf="pacienteForm.get('edad')?.touched && pacienteForm.get('edad')?.invalid" class="text-danger small">Edad válida es requerida.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="dniPaciente" class="form-label">DNI</label>
+        <input placeholder="Dni" id="dniPaciente" formControlName="dni" type="text" maxlength="8" class="form-control" />
+        <div *ngIf="pacienteForm.get('dni')?.touched && pacienteForm.get('dni')?.invalid" class="text-danger small">DNI válido (7-8 dígitos) es requerido.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="obraSocialPaciente" class="form-label">Obra Social</label>
+        <input placeholder="Obra Social" id="obraSocialPaciente" formControlName="obra_social" type="text" class="form-control" />
+        <div *ngIf="pacienteForm.get('obra_social')?.touched && pacienteForm.get('obra_social')?.invalid" class="text-danger small">La obra social es requerida.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="emailPaciente" class="form-label">Email</label>
+        <input placeholder="Email" id="emailPaciente" formControlName="email" type="email" class="form-control" />
+        <div *ngIf="pacienteForm.get('email')?.touched && pacienteForm.get('email')?.invalid" class="text-danger small">Email válido es requerido.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="passwordPaciente" class="form-label">Contraseña</label>
+        <input placeholder="Contraseña" id="passwordPaciente" formControlName="password" type="password" class="form-control" />
+        <div *ngIf="pacienteForm.get('password')?.touched && pacienteForm.get('password')?.invalid" class="text-danger small">Contraseña (mínimo 6 caracteres) es requerida.</div>
+      </div>
+  <div class="mb-3 text-start">
+    <label class="form-label">Imágenes de perfil</label>
+    <div class="d-flex gap-4">
+      <!-- Imagen 1 -->
+      <label class="image-label">
+        <input
+          type="file"
+          (change)="onFileSelect($event, pacienteForm, 'imagen1')"
+          accept="image/*"
+          hidden
+        />
+        <div
+          class="image-preview"
+          [ngClass]="{'is-invalid': pacienteForm.get('imagen1')?.touched && pacienteForm.get('imagen1')?.invalid}"
+          [ngStyle]="{
+            'background-image': pacienteImage1Preview ? 'url(' + pacienteImage1Preview + ')' : ''
+          }"
+        >
+          <i class="bi bi-plus" *ngIf="!pacienteImage1Preview"></i>
+        </div>
+      </label>
+
+      <!-- Imagen 2 -->
+      <label class="image-label">
+        <input
+          type="file"
+          (change)="onFileSelect($event, pacienteForm, 'imagen2')"
+          accept="image/*"
+          hidden
+        />
+        <div
+          class="image-preview"
+          [ngClass]="{'is-invalid': pacienteForm.get('imagen2')?.touched && pacienteForm.get('imagen2')?.invalid}"
+          [ngStyle]="{
+            'background-image': pacienteImage2Preview ? 'url(' + pacienteImage2Preview + ')' : ''
+          }"
+        >
+          <i class="bi bi-plus" *ngIf="!pacienteImage2Preview"></i>
+        </div>
+      </label>
+      </div>
+      <div *ngIf="pacienteForm.get('imagen1')?.touched && pacienteForm.get('imagen1')?.invalid" class="text-danger small mt-1">
+        Imagen 1 requerida.
+      </div>
+      <div *ngIf="pacienteForm.get('imagen2')?.touched && pacienteForm.get('imagen2')?.invalid" class="text-danger small">
+        Imagen 2 requerida.
+      </div>
+  </div>
+
+      <button type="submit" class="btn btn-primary w-100" [disabled]="pacienteForm.invalid">Registrarse como Paciente</button>
+    </form>
+
+    <!-- Formulario Especialista -->
+    <form *ngIf="tipoRegistro === 'especialista'" [formGroup]="especialistaForm" (ngSubmit)="onEspecialistaSubmit()" novalidate>
+      <div class="mb-3 text-start">
+        <label for="nombreEspecialista" class="form-label">Nombre</label>
+        <input placeholder="Nombre" id="nombreEspecialista" formControlName="nombre" type="text" class="form-control" />
+        <div *ngIf="especialistaForm.get('nombre')?.touched && especialistaForm.get('nombre')?.invalid" class="text-danger small">El nombre es requerido.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="apellidoEspecialista" class="form-label">Apellido</label>
+        <input placeholder="Apellido" id="apellidoEspecialista" formControlName="apellido" type="text" class="form-control" />
+        <div *ngIf="especialistaForm.get('apellido')?.touched && especialistaForm.get('apellido')?.invalid" class="text-danger small">El apellido es requerido.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="edadEspecialista" class="form-label">Edad</label>
+        <input placeholder="Edad" id="edadEspecialista" formControlName="edad" type="number" min="0" class="form-control" />
+        <div *ngIf="especialistaForm.get('edad')?.touched && especialistaForm.get('edad')?.invalid" class="text-danger small">Edad válida es requerida.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="dniEspecialista" class="form-label">DNI</label>
+        <input placeholder="Dni" id="dniEspecialista" formControlName="dni" type="text" maxlength="8" class="form-control" />
+        <div *ngIf="especialistaForm.get('dni')?.touched && especialistaForm.get('dni')?.invalid" class="text-danger small">DNI válido (7-8 dígitos) es requerido.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label class="form-label">Especialidad</label>
+       <select formControlName="especialidad" class="form-select" 
+         (change)="mostrarInputEspecialidad = ($any($event.target).value === 'otra')">
+
+          <option value="" disabled selected>Seleccione una especialidad</option>
+          <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+          <option value="otra">Otra...</option>
+        </select>
+        <div *ngIf="especialistaForm.get('especialidad')?.touched && especialistaForm.get('especialidad')?.invalid" class="text-danger small">La especialidad es requerida.</div>
+
+        <div *ngIf="mostrarInputEspecialidad" class="mt-2 d-flex gap-2">
+          <input type="text" [(ngModel)]="nuevaEspecialidad" placeholder="Nueva especialidad" class="form-control" />
+          <button type="button" class="btn btn-secondary" (click)="agregarEspecialidad()">Agregar</button>
+        </div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="emailEspecialista" class="form-label">Email</label>
+        <input placeholder="Email" id="emailEspecialista" formControlName="email" type="email" class="form-control" />
+        <div *ngIf="especialistaForm.get('email')?.touched && especialistaForm.get('email')?.invalid" class="text-danger small">Email válido es requerido.</div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="passwordEspecialista" class="form-label">Contraseña</label>
+        <input placeholder="Contraseña" id="passwordEspecialista" formControlName="password" type="password" class="form-control" />
+        <div *ngIf="especialistaForm.get('password')?.touched && especialistaForm.get('password')?.invalid" class="text-danger small">Contraseña (mínimo 6 caracteres) es requerida.</div>
+      </div>
+    <div class="mb-3 text-start">
+      <label class="form-label">Imagen de perfil</label>
+      <div class="image-upload-container">
+        <label class="image-label">
+          <input
+            type="file"
+            (change)="onFileSelect($event, especialistaForm, 'imagen')"
+            accept="image/*"
+            hidden
+          />
+          <div
+            class="image-preview"
+            [ngClass]="{'is-invalid': especialistaForm.get('imagen')?.touched && especialistaForm.get('imagen')?.invalid}"
+            [ngStyle]="{
+              'background-image': especialistaImagePreview ? 'url(' + especialistaImagePreview + ')' : ''
+            }"
+          >
+            <i class="bi bi-plus" *ngIf="!especialistaImagePreview"></i>
+          </div>
+        </label>
+      </div>
+        <div *ngIf="especialistaForm.get('imagen')?.touched && especialistaForm.get('imagen')?.invalid" class="text-danger small">
+          La imagen es requerida.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-100" [disabled]="especialistaForm.invalid">Registrarse como Especialista</button>
+    </form>
+  </div>
+</div>

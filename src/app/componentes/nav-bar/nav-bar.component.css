@@ -5,14 +5,13 @@
 .clinic-brand {
   font-size: 1.8rem;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #4193eb;
+  color: #4193eb;
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 .clinic-brand:hover {
   color: #0044ff;
-  text-decoration: underline;
-  cursor: pointer;
+
 }
 
 .btn-login {

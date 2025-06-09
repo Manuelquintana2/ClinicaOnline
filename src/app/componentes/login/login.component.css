@@ -1,0 +1,81 @@
+.login-container {
+  min-height: 91.8vh;
+  background-color: #25204e;
+  padding: 2rem;
+}
+
+.login-form {
+  max-width: 400px;
+}
+
+.login-box {
+  max-width: 400px;
+  width: 100%;
+  background-color: #1e1b3a;
+  border: 2px solid #4193eb; /* borde celeste */
+  border-radius: 0.5rem;
+  box-shadow:
+    0 0 8px 2px rgba(65, 147, 235, 0.7),
+    0 0 15px 5px rgba(65, 147, 235, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.login-box:hover {
+  box-shadow:
+    0 0 12px 4px rgba(65, 147, 235, 0.9),
+    0 0 20px 8px rgba(65, 147, 235, 0.5);
+}
+
+
+.login-input {
+  background-color: #1e1b3a;
+  color: white;
+  border: 1px solid #4193eb;
+  border-radius: 0.25rem;
+}
+
+.login-input::placeholder {
+  color: #aaaaaa;
+}
+
+.login-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(65, 147, 235, 0.25);
+}
+
+.btn-login {
+  color: #4193eb;
+  border: 2px solid #4193eb;
+  background: transparent;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #0044ff;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-home {
+  color: #ffffff;
+  border: 2px solid #4193eb;
+  background: #4193eb;
+  font-weight: 600;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-home:hover{
+     background-color: #0044ff;
+  color: white;
+  cursor: pointer;
+}
+
+.btn-outline-light:hover {
+  background-color: #4193eb;
+  color: white;
+}
+
+.text-celeste {
+  color: #4193eb;
+}
