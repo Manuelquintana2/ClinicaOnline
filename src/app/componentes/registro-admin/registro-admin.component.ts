@@ -6,10 +6,11 @@ import { AuthService } from '../../servicios/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Admin } from '../../interface/users';
+import { NgxCaptchaModule } from 'ngx-captcha';
 
 @Component({
   selector: 'app-registro-admin',
-  imports:[CommonModule,FormsModule,ReactiveFormsModule,RouterLink],
+  imports:[CommonModule,FormsModule,ReactiveFormsModule,RouterLink, NgxCaptchaModule],
   templateUrl: './registro-admin.component.html',
   styleUrls: ['./registro-admin.component.css']
 })
@@ -31,7 +32,8 @@ export class RegistroAdminComponent {
       dni: ['', [Validators.required, Validators.pattern(/^\d{7,8}$/)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      imagen: [null, Validators.required]
+      imagen: [null, Validators.required],
+      recaptcha: [null, Validators.required],
     });
   }
 

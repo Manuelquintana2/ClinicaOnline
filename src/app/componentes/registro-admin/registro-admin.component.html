@@ -79,6 +79,11 @@
         <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
              {{ errorMessage }}
         </div>
+         <div class="d-flex justify-content-center my-3">
+          <ngx-recaptcha2 [siteKey]="'6LdcrFsrAAAAAE8RtqWCHiumfFKaosJQz7azxWVd'"
+          [useGlobalDomain]="false" formControlName = "recaptcha"></ngx-recaptcha2>
+
+        </div> 
       <button type="submit" class="btn registro-btn w-100" [disabled]="adminForm.invalid">
         Registrarse como Administrador
       </button>

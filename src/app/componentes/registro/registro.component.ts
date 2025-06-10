@@ -14,10 +14,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { EspecialidadesService } from '../../servicios/especialidades.service';
 import { Subscription } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
+import {NgxCaptchaModule} from 'ngx-captcha'
 
 @Component({
   selector: 'app-registro',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule,RouterLink],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule,RouterLink,NgxCaptchaModule],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'
 })
@@ -52,6 +53,7 @@ export class RegistroComponent implements OnInit{
       password: ['', [Validators.required, Validators.minLength(6)]],
       imagen1: [null, Validators.required],
       imagen2: [null, Validators.required],
+      recaptcha: [null, Validators.required],
     });
 
     this.especialistaForm = this.fb.group({
@@ -63,6 +65,7 @@ export class RegistroComponent implements OnInit{
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       imagen: [null, Validators.required],
+      recaptcha: [null, Validators.required],
     });
   }
 
