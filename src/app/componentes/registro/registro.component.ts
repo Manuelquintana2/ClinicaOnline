@@ -37,7 +37,6 @@ export class RegistroComponent implements OnInit{
   especialistaForm: FormGroup;
 
   especialidades!: string[];
-  nuevaEspecialidad: string = '';
 
   constructor(private fb: FormBuilder, 
     private auth: AuthService, 
@@ -62,6 +61,7 @@ export class RegistroComponent implements OnInit{
       edad: ['', [Validators.required, Validators.min(25), Validators.max(80)]],
       dni: ['', [Validators.required, Validators.pattern(/^\d{7,8}$/)]],
       especialidades: [[], Validators.required],
+      nuevaEspecialidad:[],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       imagen: [null, Validators.required],
