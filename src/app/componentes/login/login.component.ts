@@ -3,16 +3,18 @@ import { AuthService } from '../../servicios/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink,SpinnerComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
   email = '';
   password = '';
+  cargando = false;
 
   constructor(private auth: AuthService, private router: Router) {}
 
@@ -45,8 +47,12 @@ export class LoginComponent {
         }
         return;
       }
+      this.cargando = true;
       // Login exitoso, redirigir
-      this.router.navigate(['/home']);
+      setTimeout(()=>{
+        this.cargando = false;
+        this.router.navigate(['/home']);
+      },2000)
     } catch (error) {
       console.error(error);
       this.errorMessage = 'Error inesperado. Intenta más tarde.';
