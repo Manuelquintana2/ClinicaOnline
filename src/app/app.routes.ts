@@ -3,6 +3,7 @@ import { HomeComponent } from './componentes/home/home.component';
 import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/registro/registro.component'
 import { SeccionUsuariosComponent } from './componentes/seccion-usuarios/seccion-usuarios.component';
+import { RegistroAdminComponent } from './componentes/registro-admin/registro-admin.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
@@ -10,5 +11,6 @@ export const routes: Routes = [
     {path:"login", component: LoginComponent},
     {path:"registro", component: RegistroComponent},
     {path:"admin/seccion-usuarios", component: SeccionUsuariosComponent},
+    {path:"admin/registro-admin", component: RegistroAdminComponent},
 
 ];

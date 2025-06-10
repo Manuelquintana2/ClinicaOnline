@@ -1,0 +1,87 @@
+<div class="registro-container text-white d-flex flex-column align-items-center justify-content-center">
+  <button class="btn btn-primary btn-flotante" routerLink="/admin/seccion-usuarios" aria-label="Volver a usuarios">
+  <i class="bi bi-arrow-return-left"></i>
+    </button>
+    <div class="registro-box p-4 text-center" style="max-width: 600px;">
+    <h2 class="mb-4 text-celeste">Registro de Administrador</h2>
+    <h6 class="mb-4">Crea una cuenta de administrador para gestionar la clínica</h6>
+
+    <!-- Formulario de administrador -->
+    <form [formGroup]="adminForm" (ngSubmit)="onAdminSubmit()" novalidate>
+      <div class="mb-3 text-start">
+        <label for="nombreAdmin" class="form-label">Nombre</label>
+        <input id="nombreAdmin" type="text" class="form-control" placeholder="Nombre" formControlName="nombre" />
+        <div *ngIf="adminForm.get('nombre')?.touched && adminForm.get('nombre')?.invalid" class="text-danger small">
+          El nombre es requerido.
+        </div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="apellidoAdmin" class="form-label">Apellido</label>
+        <input id="apellidoAdmin" type="text" class="form-control" placeholder="Apellido" formControlName="apellido" />
+        <div *ngIf="adminForm.get('apellido')?.touched && adminForm.get('apellido')?.invalid" class="text-danger small">
+          El apellido es requerido.
+        </div>
+      </div>
+        <div class="mb-3 text-start">
+        <label for="edadAdmin" class="form-label">Edad</label>
+        <input id="edadAdmin" type="number" class="form-control" placeholder="Edad" formControlName="edad" />
+        <div *ngIf="adminForm.get('edad')?.touched && adminForm.get('edad')?.invalid" class="text-danger small">
+            Edad válida (mayor de 18) es requerida.
+        </div>
+        </div>
+
+        <div class="mb-3 text-start">
+        <label for="dniAdmin" class="form-label">DNI</label>
+        <input id="dniAdmin" type="text" class="form-control" placeholder="DNI" formControlName="dni" />
+        <div *ngIf="adminForm.get('dni')?.touched && adminForm.get('dni')?.invalid" class="text-danger small">
+            DNI válido es requerido.
+        </div>
+        </div>
+
+      <div class="mb-3 text-start">
+        <label for="emailAdmin" class="form-label">Email</label>
+        <input id="emailAdmin" type="email" class="form-control" placeholder="Email" formControlName="email" />
+        <div *ngIf="adminForm.get('email')?.touched && adminForm.get('email')?.invalid" class="text-danger small">
+          Email válido es requerido.
+        </div>
+      </div>
+
+      <div class="mb-3 text-start">
+        <label for="passwordAdmin" class="form-label">Contraseña</label>
+        <input id="passwordAdmin" type="password" class="form-control" placeholder="Contraseña" formControlName="password" />
+        <div *ngIf="adminForm.get('password')?.touched && adminForm.get('password')?.invalid" class="text-danger small">
+          Contraseña (mínimo 6 caracteres) es requerida.
+        </div>
+      </div>
+
+      <!-- Imagen de perfil única -->
+      <div class="mb-3 text-start">
+        <label class="form-label">Imagen de perfil</label>
+        <div class="image-upload-container">
+          <label class="image-label">
+            <input type="file" accept="image/*" hidden (change)="onFileSelect($event, adminForm, 'imagen')" />
+            <div
+              class="image-preview"
+              [ngClass]="{'is-invalid': adminForm.get('imagen')?.touched && adminForm.get('imagen')?.invalid}"
+              [ngStyle]="{
+                'background-image': adminImagePreview ? 'url(' + adminImagePreview + ')' : ''
+              }"
+            >
+              <i class="bi bi-plus" *ngIf="!adminImagePreview"></i>
+            </div>
+          </label>
+        </div>
+        <div *ngIf="adminForm.get('imagen')?.touched && adminForm.get('imagen')?.invalid" class="text-danger small mt-1">
+          Imagen requerida.
+        </div>
+      </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+             {{ errorMessage }}
+        </div>
+      <button type="submit" class="btn registro-btn w-100" [disabled]="adminForm.invalid">
+        Registrarse como Administrador
+      </button>
+    </form>
+  </div>
+</div>

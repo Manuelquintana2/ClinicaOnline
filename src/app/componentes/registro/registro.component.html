@@ -1,4 +1,7 @@
 <div class="registro-container text-white d-flex flex-column align-items-center justify-content-center">
+    <button class="btn btn-primary btn-flotante" routerLink="/home" aria-label="Volver a usuarios">
+  <i class="bi bi-arrow-return-left"></i>   
+    </button>
   <div class="registro-box p-4 text-center" style="max-width: 600px;">
     <h2 class="mb-4 text-celeste">Registrarse</h2>
     <h6 class="mb-4">Crea una cuenta nueva para empezar a usar los beneficios de la clínica</h6>
@@ -111,7 +114,9 @@
         Imagen 2 requerida.
       </div>
   </div>
-
+       <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+             {{ errorMessage }}
+        </div>
       <button type="submit" class="btn btn-primary w-100" [disabled]="pacienteForm.invalid">Registrarse como Paciente</button>
     </form>
 
@@ -198,6 +203,9 @@
           La imagen es requerida.
         </div>
       </div>
+         <div *ngIf="errorMessage" class="alert alert-danger mt-3" role="alert">
+             {{ errorMessage }}
+        </div>
       <button type="submit" class="btn btn-primary w-100" [disabled]="especialistaForm.invalid">Registrarse como Especialista</button>
     </form>
   </div>

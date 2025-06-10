@@ -13,11 +13,11 @@ import { AuthService } from '../../servicios/auth.service';
 import { v4 as uuidv4 } from 'uuid'; 
 import { EspecialidadesService } from '../../servicios/especialidades.service';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registro',
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule,RouterLink],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'
 })
@@ -25,6 +25,8 @@ export class RegistroComponent implements OnInit{
   perfil: string | null = null;
   private sub!: Subscription;
   tipoRegistro: 'paciente' | 'especialista' | null = null;
+
+  errorMessage: string | null = null;
 
   especialistaImagePreview: string | null = null;
   pacienteImage1Preview: string | null = null;
@@ -183,8 +185,18 @@ export class RegistroComponent implements OnInit{
         this.router.navigate(["/login"])
       }
 
-    } catch (err) {
-      console.error('Error inesperado:', err);
+    } catch (err: any) {
+      const message = err instanceof Error ? err.message : String(err);
+
+      switch (message) {
+        case 'El correo ya está registrado.':
+          this.errorMessage = 'El correo ya está registrado.';
+          break;
+        default:
+          this.errorMessage = 'Ocurrió un error inesperado.';
+          console.error(err);
+          break;
+      }
     }
   }
 
@@ -240,8 +252,18 @@ export class RegistroComponent implements OnInit{
         this.router.navigate(["/login"])
       }
 
-    } catch (err) {
-      console.error('Error inesperado:', err);
+    } catch (err: any) {
+      const message = err instanceof Error ? err.message : String(err);
+
+      switch (message) {
+        case 'El correo ya está registrado.':
+          this.errorMessage = 'El correo ya está registrado.';
+          break;
+        default:
+          this.errorMessage = 'Ocurrió un error inesperado.';
+          console.error(err);
+          break;
+      }
     }
   }
 
