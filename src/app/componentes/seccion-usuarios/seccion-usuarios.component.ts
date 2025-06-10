@@ -31,7 +31,6 @@ export class SeccionUsuariosComponent implements OnInit {
     return usuario.perfil === 'especialista' && 'esta_habilitado' in usuario;
   }
 
-
   async toggleHabilitacion(usuario: Usuario) {
     if (this.isEspecialista(usuario)) {
       try {

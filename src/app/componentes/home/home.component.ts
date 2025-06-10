@@ -21,12 +21,15 @@ export class HomeComponent {
     ngOnInit() {
     // Cuando cambie el usuario (login/logout), traemos perfil
     this.sub = this.authService.currentUser$.subscribe(async user => {
+      console.log(user)
       if (user) {
         const data = await this.authService.getUserProfile();
         this.perfil = data?.perfil ?? null;
       } else {
         this.perfil = null;
       }
+      console.log(this.perfil)
+      console.log(user)
     });
   }
 
