@@ -1,17 +1,28 @@
 <div class="home-container text-center text-white">
-<h1 class="home-title typewriter-wrapper">
-  Bienvenido a <span class="typewriter">Clínica Online</span>
-</h1>
+  <h1 class="home-title typewriter-wrapper">
+    Bienvenido a <span class="typewriter">Clínica Online</span>
+  </h1>
 
   <p class="home-description">
     En nuestra clínica digital, cuidamos tu salud estés donde estés. Brindamos atención médica profesional, turnos online y seguimiento personalizado.
   </p>
 
-  <div class="home-separator" ></div>
+  <div class="home-separator"></div>
 
   <div class="home-buttons d-flex justify-content-center gap-3 mt-4">
     <button class="btn home-btn">Sobre Mí</button>
     <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin/seccion-usuarios">Sección Usuarios</button>
   </div>
 
+  <!-- NUEVA SECCIÓN PARA PACIENTES -->
+  <div class="mt-5 con">
+    <h2 *ngIf="perfil != null" class="home-subtitle">Consultas Médicas</h2>
+    <div class="d-flex justify-content-center gap-3 mt-3">
+      <button *ngIf="perfil === 'admin' || perfil === 'paciente'" class="btn home-btn" routerLink="/paciente/solicitar-turno">Solicitar Turno</button>
+        <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin/seccion-usuarios">Todos los turnos</button>
+          <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin/seccion-usuarios">Graficos</button>
+      <button *ngIf="perfil === 'especialista' || perfil === 'paciente'" class="btn home-btn" routerLink="/paciente/mis-turnos">Mis Turnos</button>
+      <button *ngIf="perfil === 'especialista'" class="btn home-btn" routerLink="/paciente/mis-turnos">Pacientes previos</button>
+    </div>
+  </div>
 </div>

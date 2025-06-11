@@ -144,6 +144,21 @@ async getCurrentUser() {
 
     return error ? null : data;
   }
+  
+    async getUsuarioPorEmail(email: string): Promise<Usuario | null> {
+    const { data, error } = await this.supabase
+      .from('usuarios_clinica')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user by email:', error);
+      return null;
+    }
+
+    return data;
+  }
 
   async getAllUsers(): Promise<Usuario[]> {
     const { data, error } = await this.supabase

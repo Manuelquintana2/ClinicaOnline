@@ -53,9 +53,9 @@ export class LoginComponent {
       icono: 'bi-person-circle',
       expanded: false,
       usuarios: [
-        { email: 'yepacef747@jio1.com', password: '123456', imagen_perfil: null },
+        { email: 'tagala5029@jio1.com', password: '123456', imagen_perfil: null },
         { email: 'mogoliw132@jio1.com', password: '123456', imagen_perfil: null },
-        { email: 'kesexo5727@lewou.com', password: '123456', imagen_perfil: null }
+        { email: 'mopabe7061@lewou.com', password: '123456', imagen_perfil: null }
       ]
     }
   ];

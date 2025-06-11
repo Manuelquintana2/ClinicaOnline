@@ -9,13 +9,11 @@
     <!-- Botones para elegir registro -->
     <div class="d-flex flex-column flex-md-row gap-5 justify-content-center mb-4">
       <button class="btn registro-btn px-5 py-4 d-flex align-items-center gap-3" (click)="seleccionar('especialista')" [class.active]="tipoRegistro === 'especialista'">
-        <i class="bi bi-clipboard-pulse fs-1"></i>
-        <span class="fs-4">Especialista</span>
+        <i class="bi bi-clipboard-pulse"></i>
       </button>
 
       <button class="btn registro-btn px-5 py-4 d-flex align-items-center gap-3" (click)="seleccionar('paciente')" [class.active]="tipoRegistro === 'paciente'">
-        <i class="bi bi-person-circle fs-1"></i>
-        <span class="fs-4">Paciente</span>
+        <i class="bi bi-person-circle"></i>
       </button>
     </div>
 

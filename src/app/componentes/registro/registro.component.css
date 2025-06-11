@@ -1,9 +1,11 @@
+/* Contenedor principal */
 .registro-container {
   min-height: 91.8vh;
   background-color: #25204e;
   padding: 3rem;
 }
 
+/* Caja del formulario */
 .registro-box {
   background-color: #1e1b3a;
   border: 2px solid #4193eb;
@@ -20,14 +22,38 @@
     0 0 35px 12px rgba(65, 147, 235, 0.5);
 }
 
+/* BOTONES DE REGISTRO COMO CÍRCULOS VERTICALES */
+.d-flex.flex-md-row {
+  flex-direction: column !important;
+  align-items: center;
+  gap: 2rem !important;
+}
+
 .registro-btn {
+  width: 157px;
+  height: 170px;
+  border-radius: 50% !important;
   background-color: #4193eb;
   color: white;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
-  border-radius: 0.75rem;
   border: none;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.registro-btn i {
+  font-size: 3.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.registro-btn span {
+  font-size: 2rem;
 }
 
 .registro-btn:hover {
@@ -36,11 +62,16 @@
   cursor: pointer;
 }
 
+.registro-btn.active {
+  box-shadow: 0 0 0 4px rgba(65, 147, 235, 0.6);
+}
+
+/* Títulos */
 .text-celeste {
   color: #4193eb;
 }
 
-
+/* Inputs y selects */
 input,
 select,
 textarea {
@@ -48,6 +79,10 @@ textarea {
   color: white !important;
   border: 1px solid #4193eb !important;
   border-radius: 0.25rem;
+}
+
+input::placeholder {
+  color: #4c4e51;
 }
 
 .form-label {
@@ -67,11 +102,7 @@ textarea:active {
   outline: none !important;
 }
 
-input::placeholder{
-  color: #4c4e51;
-}
-
-/* Estilo para input file y su botón */
+/* File input */
 input[type="file"] {
   background-color: #1e1b3a !important;
   color: white !important;
@@ -94,6 +125,7 @@ input[type="file"]::file-selector-button:hover {
   background-color: #0044ff;
 }
 
+/* Imagenes de perfil */
 .image-upload-container {
   display: flex;
   justify-content: flex-start;
@@ -127,6 +159,7 @@ input[type="file"]::file-selector-button:hover {
   border-color: #dc3545;
 }
 
+/* Botón flotante */
 .btn-flotante {
   position: fixed;
   bottom: 20px;
@@ -141,5 +174,3 @@ input[type="file"]::file-selector-button:hover {
   justify-content: center;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
-
-

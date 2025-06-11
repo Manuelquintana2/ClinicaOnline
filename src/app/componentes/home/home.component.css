@@ -75,3 +75,31 @@
   }
 }
 
+.con {
+  background-color: #3a3a8c; /* un azul más claro que el fondo principal */
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.home-subtitle {
+  color: #a8c1ff; /* un azul claro suave */
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.con .home-btn {
+  font-size: 1.25rem; /* botones más grandes */
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.con .home-btn:hover {
+  background-color: #0026b3;
+  transform: scale(1.1);
+  cursor: pointer;
+}
