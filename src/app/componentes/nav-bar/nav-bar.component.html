@@ -32,14 +32,16 @@
           </button>
         </li>
          <li class="nav-item d-flex align-items-center me-3" *ngIf="isLoggedIn && usuario">
-          <img 
-            [src]="usuario.imagen_perfil || 'assets/default-avatar.png'" 
-            alt="Foto de perfil" 
-            class="rounded-circle me-2" 
-            width="40" height="40"
-          />
-          <span class="text-white me-3">{{ usuario.nombre }}</span>
-          <button class="btn btn-register" (click)="cerrarSesion()">
+          <button class="btn btn-perfil">
+            <img 
+              [src]="usuario.imagen_perfil || 'assets/default-avatar.png'" 
+              alt="Foto de perfil" 
+              class="rounded-circle me-2" 
+              width="50" height="50"
+            />
+            <span class="text-white me-3 fs-5 spanUser">{{ usuario.nombre }}</span>
+          </button>
+          <button class="btn btn-login" (click)="cerrarSesion()">
             Cerrar sesión
           </button>
         </li>

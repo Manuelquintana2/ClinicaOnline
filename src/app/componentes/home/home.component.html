@@ -15,8 +15,8 @@
   </div>
 
   <!-- NUEVA SECCIÓN PARA PACIENTES -->
-  <div class="mt-5 con">
-    <h2 *ngIf="perfil != null" class="home-subtitle">Consultas Médicas</h2>
+  <div *ngIf="perfil != null" class="mt-5 con">
+    <h2 class="home-subtitle">Consultas Médicas</h2>
     <div class="d-flex justify-content-center gap-3 mt-3">
       <button *ngIf="perfil === 'admin' || perfil === 'paciente'" class="btn home-btn" routerLink="/paciente/solicitar-turno">Solicitar Turno</button>
         <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin/seccion-usuarios">Todos los turnos</button>
