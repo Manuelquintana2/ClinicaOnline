@@ -18,18 +18,19 @@ export class HomeComponent {
 
   constructor(private authService: AuthService) {}
 
-    ngOnInit() {
-    // Cuando cambie el usuario (login/logout), traemos perfil
+  ngOnInit() {
     this.sub = this.authService.currentUser$.subscribe(async user => {
-      console.log(user)
+      console.log('Usuario actual:', user);
+
       if (user) {
         const data = await this.authService.getUserProfile();
         this.perfil = data?.perfil ?? null;
       } else {
+        // Usuario se deslogueó, limpiar perfil
         this.perfil = null;
       }
-      console.log(this.perfil)
-      console.log(user)
+
+      console.log('Perfil cargado:', this.perfil);
     });
   }
 

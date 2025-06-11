@@ -28,13 +28,26 @@
             </button>
         </form>
         <a>¿No tienes cuenta? <a routerLink="/registro">Registrate aca</a></a>
-        <div class="quick-logins mt-4 d-flex flex-column gap-2">
-            <p class="mb-1 text-center">Usuarios de prueba:</p>
-            <div class="d-flex flex-wrap gap-2 justify-content-center">
-            <button class="btn btn-sm btn-outline-light" (click)="fillUser('manu.quintanamino@gmail.com', '123456')">Admin</button>
-            <button class="btn btn-sm btn-outline-light" (click)="fillUser('gimob28532@lewou.com', '123456')">Doctor</button>
-            <button class="btn btn-sm btn-outline-light" (click)="fillUser('kesexo5727@lewou.com', '123456')">Paciente</button>
+        <!-- FABs flotantes por grupo -->
+        <div class="fab-container">
+        <div *ngFor="let grupo of gruposUsuarios" class="fab-group">
+            <!-- Botón principal -->
+            <div class="fab" (click)="toggleGrupo(grupo)" [title]="grupo.tipo">
+            <i class="bi" [ngClass]="grupo.icono"></i>
             </div>
+
+            <!-- Avatares desplegados -->
+            <div *ngIf="grupo.expanded" class="fab-subgroup">
+            <div
+                *ngFor="let user of grupo.usuarios"
+                class="fab-image"
+                (click)="fillUser(user.email, user.password)"
+                [title]="user.email"
+            >
+                <img [src]="user.imagen_perfil || 'assets/default-avatar.png'" alt="Perfil" />
+            </div>
+            </div>
+        </div>
         </div>
         <div class="mt-4 text-center">
             <button class="btn btn-home" routerLink="/home">Volver al Home</button>

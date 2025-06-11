@@ -50,6 +50,7 @@ export class AuthService {
 
     // Por si acaso, chequeo redundante
     if (!user?.email_confirmed_at) {
+      this.supabase.auth.signOut()
       return { success: false, message: 'Debe verificar su correo antes de ingresar.' };
     }
 
@@ -66,6 +67,7 @@ export class AuthService {
 
     // ⛔ Si es especialista y no está habilitado, denegar acceso
     if (perfilData.perfil === 'especialista' && !perfilData.esta_habilitado) {
+      this.supabase.auth.signOut()
       return {
         success: false,
         message: 'El especialista aún no está habilitado para acceder. Espere aprobación del administrador.',
@@ -126,15 +128,20 @@ async getCurrentUser() {
   async insertUser(user: any) {
     return await this.supabase.from('usuarios_clinica').insert(user);
   }
+  async getUserProfile(): Promise<{ perfil: string } | null> {
+    // Obtiene la sesión actual directamente de Supabase
+    const { data: sessionData, error: sessionError } = await this.supabase.auth.getSession();
+    
+    if (sessionError || !sessionData.session) return null;
 
- async getUserProfile(): Promise<{ perfil: string } | null> {
-    const user = this.currentUserSubject.value;
-    if (!user) return null;
+    const uid = sessionData.session.user.id;
+
     const { data, error } = await this.supabase
       .from('usuarios_clinica')
       .select('perfil')
-      .eq('uid', user.id)
+      .eq('uid', uid)
       .single();
+
     return error ? null : data;
   }
 
@@ -163,4 +170,20 @@ async getCurrentUser() {
       throw error;
     }
   }
+
+  async getProfileImageByEmail(email: string): Promise<string | null> {
+  const { data, error } = await this.supabase
+    .from('usuarios_clinica')
+    .select('imagen_perfil')
+    .eq('email', email)
+    .single();
+
+  if (error || !data?.imagen_perfil) {
+    console.error('No se pudo obtener la imagen de perfil:', error);
+    return null;
+  }
+
+  return data.imagen_perfil;
+}
+
 }
