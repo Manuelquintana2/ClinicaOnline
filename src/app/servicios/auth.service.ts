@@ -201,4 +201,23 @@ async getCurrentUser() {
   return data.imagen_perfil;
 }
 
+ async guardarDisponibilidad(disponibilidad: {
+    uid_especialista: string;
+    especialidad: string;
+    dia: string;
+    desde: string;
+    hasta: string;
+    duracion_turno: number;
+  }) {
+    const { error } = await this.supabase
+      .from('disponibilidades')
+      .insert([disponibilidad]);
+
+    if (error) {
+      console.error('Error al guardar disponibilidad:', error.message);
+      throw error;
+    }
+
+    return true;
+  }
 }

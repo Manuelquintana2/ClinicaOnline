@@ -1,0 +1,96 @@
+<div class="perfil-container">
+  <div class="con">
+      
+      <div *ngIf="usuario" class="perfil-info">
+          <h2 class="perfil-subtitle">Mi Perfil</h2>
+          <div class="imagenes-container">
+        <img
+          *ngIf="usuario.imagen_perfil"
+          [src]="usuario.imagen_perfil"
+          alt="Imagen de perfil"
+          class="perfil-img"
+        />
+        <img
+          *ngIf="isPaciente(usuario)"
+          [src]="usuario.imagen_perfil_aux"
+          alt="Imagen auxiliar"
+          class="perfil-img"
+        />
+      </div>
+
+      <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+      <p><strong>Apellido:</strong> {{ usuario.apellido }}</p>
+      <p><strong>Edad:</strong> {{ usuario.edad }}</p>
+      <p><strong>DNI:</strong> {{ usuario.dni }}</p>
+      <p><strong>Email:</strong> {{ usuario.email }}</p>
+      <p><strong>Perfil:</strong> {{ usuario.perfil }}</p>
+
+      <ng-container *ngIf="isPaciente(usuario)">
+        <p><strong>Obra Social:</strong> {{ usuario.obra_social }}</p>
+      </ng-container>
+
+      <ng-container *ngIf="isEspecialista(usuario)">
+        <p><strong>Especialidades:</strong> {{ usuario.especialidades.join(', ') }}</p>
+       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDisponibilidad">
+        Seleccionar disponibilidad horaria
+      </button>
+      </ng-container>
+    </div>
+
+    <div *ngIf="!usuario && !cargando" class="error-msg">
+      <p>No se pudo cargar el perfil del usuario.</p>
+    </div>
+  </div>
+  <div class="modal fade" id="modalDisponibilidad"  #modalDisponibilidad tabindex="-1" aria-labelledby="modalDisponibilidadLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title text-celeste" id="modalDisponibilidadLabel">Cargar disponibilidad</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="guardarDisponibilidad()" #disponibilidadForm="ngForm">
+          <div class="mb-3">
+            <label class="form-label">Especialidad</label>
+            <select *ngIf="isEspecialista(usuario)" class="form-select" [(ngModel)]="disponibilidad.especialidad" name="especialidad" required>
+              <option *ngFor="let esp of usuario.especialidades" [value]="esp">{{ esp }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Día</label>
+            <select class="form-select" [(ngModel)]="disponibilidad.dia" name="dia" required>
+              <option *ngFor="let d of dias" [value]="d">{{ d | titlecase }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3 d-flex justify-content-between">
+            <div class="me-2 w-50">
+              <label class="form-label">Desde</label>
+              <input type="time" class="form-control" [(ngModel)]="disponibilidad.desde" name="desde" required />
+            </div>
+            <div class="ms-2 w-50">
+              <label class="form-label">Hasta</label>
+              <input type="time" class="form-control" [(ngModel)]="disponibilidad.hasta" name="hasta" required />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Duración del turno</label>
+            <select class="form-select" [(ngModel)]="disponibilidad.duracion_turno" name="duracion_turno" required>
+              <option [value]="30">30 minutos</option>
+              <option [value]="45">45 minutos</option>
+              <option [value]="60">60 minutos</option>
+            </select>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success" [disabled]="!disponibilidadForm.form.valid">Guardar</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

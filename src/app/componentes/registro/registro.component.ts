@@ -139,7 +139,7 @@ export class RegistroComponent implements OnInit{
       this.pacienteForm.markAllAsTouched();
       return;
     }
-    const { nombre, apellido, edad, dni, obra_social, email, password, imagen, imagen2 } = this.pacienteForm.value;
+    const { nombre, apellido, edad, dni, obra_social, email, password, imagen1, imagen2 } = this.pacienteForm.value;
     try {
       const { data: authData, error: authError } = await this.auth.register(email, password);
 
@@ -151,10 +151,10 @@ export class RegistroComponent implements OnInit{
       const uid = authData.user.id;
 
       // 2. Subir imagen a storage
-      const file = imagen;
+      const file = imagen1;
       const file2 = imagen2
       const fileName = `pacientes/${uid}/perfil_${uuidv4()}.jpg`;
-      const fileName2 = `pacientes/${uid}/perfil_${uuidv4()}.jpg`;
+      const fileName2 = `pacientes/${uid}/perfilAux_${uuidv4()}.jpg`;
 
       const imageUrl1 = await this.auth.uploadImage(file, fileName);
       const imageUrl2 = await this.auth.uploadImage(file2, fileName2);

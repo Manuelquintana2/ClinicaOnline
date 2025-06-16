@@ -1,0 +1,93 @@
+import { Component } from '@angular/core';
+import { AuthService } from '../../servicios/auth.service';
+import { Subscription } from 'rxjs';
+import { Especialista, Paciente, Usuario } from '../../interface/users';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
+
+@Component({
+  selector: 'app-mi-perfil',
+  imports: [CommonModule,FormsModule],
+  templateUrl: './mi-perfil.component.html',
+  styleUrl: './mi-perfil.component.css'
+})
+export class MiPerfilComponent {
+
+  perfil: string | null = null;
+  cargando: boolean = true;
+  private sub!: Subscription;
+  usuario! : Usuario;
+
+  dias: string[] = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+
+  disponibilidad = {
+    especialidad: '',
+    dia: '',
+    desde: '',
+    hasta: '',
+    duracion_turno: 30
+  };
+
+  constructor(private authService: AuthService) {
+  }
+  ngOnInit() {
+    this.sub = this.authService.currentUser$.subscribe(async user => {
+      console.log('Usuario actual:', user);
+
+      if (user) {
+        const data = await this.authService.getUserProfile();
+        const usuarioResult = await this.authService.getUsuarioPorEmail(user.email);
+        if (usuarioResult) {
+          this.usuario = usuarioResult;
+          console.log('Usuario obtenido por email:', this.usuario);
+          this.perfil = this.usuario.perfil ?? null;
+        } else {
+          console.error('No se pudo obtener el usuario por email:', user);
+        }
+      } else {
+        // Usuario se deslogueó, limpiar perfil
+        this.perfil = null;
+      }
+
+      console.log('Perfil cargado:', this.perfil);
+    });
+  }
+    isPaciente(usuario: Usuario): usuario is Paciente {
+    return usuario.perfil === 'paciente';
+  }
+
+  isEspecialista(usuario: Usuario): usuario is Especialista {
+    return usuario.perfil === 'especialista';
+  }
+
+  async guardarDisponibilidad() {
+    if (!this.usuario?.uid) {
+      alert('El UID del especialista no está disponible.');
+      return;
+    }
+
+    const nueva = {
+      uid_especialista: this.usuario.uid,
+      ...this.disponibilidad
+    };
+
+    try {
+      await this.authService.guardarDisponibilidad(nueva);
+       Swal.fire({
+                icon: 'success',
+                title: '¡Registro de disponibilidad exitoso!',
+                text: 'Registrado correctamente.',
+                confirmButtonColor: '#4193eb',
+              });
+          
+    } catch (err) {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Registro exitoso!',
+            text: 'Especialista registrado correctamente.',
+            confirmButtonColor: 'red',
+          });
+    }
+  }
+}

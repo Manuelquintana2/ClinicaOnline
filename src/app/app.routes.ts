@@ -12,5 +12,6 @@ export const routes: Routes = [
     {path:"registro", component: RegistroComponent},
     {path:"admin/seccion-usuarios", component: SeccionUsuariosComponent},
     {path:"admin/registro-admin", component: RegistroAdminComponent},
+    {path: 'mi-perfil', loadComponent: () => import('./componentes/mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent) },
 
 ];

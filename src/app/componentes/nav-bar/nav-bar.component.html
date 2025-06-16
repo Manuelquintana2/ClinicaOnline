@@ -32,7 +32,7 @@
           </button>
         </li>
          <li class="nav-item d-flex align-items-center me-3" *ngIf="isLoggedIn && usuario">
-          <button class="btn btn-perfil">
+          <button class="btn btn-perfil" routerLink="/mi-perfil" routerLinkActive="active">
             <img 
               [src]="usuario.imagen_perfil || 'assets/default-avatar.png'" 
               alt="Foto de perfil" 
