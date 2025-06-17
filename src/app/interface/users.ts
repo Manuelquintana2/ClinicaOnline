@@ -22,7 +22,7 @@ export interface Paciente extends Usuario{
     imagen_perfil_aux: string; // link al storage
 }
 
-export type Horarios = {
+export interface Horarios  {
     lunes: string[];
     martes: string[];
     miercoles: string[];
@@ -30,4 +30,14 @@ export type Horarios = {
     viernes: string[];
     sabado: string[];
 };
+
+export interface Turno  {
+  uid_paciente: string;
+  uid_especialista: string;
+  especialidad: string;
+  fecha: string; // formato 'YYYY-MM-DD'
+  hora_inicio: string; // formato 'HH:mm'
+  hora_fin: string; // opcional o calculado
+  estado?: string; // opcional, default es 'reservado'
+}
 

@@ -20,7 +20,7 @@ export class MiPerfilComponent {
   usuario! : Usuario;
 
   dias: string[] = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
-
+  disponibilidades: any[] = [];
   disponibilidad = {
     especialidad: '',
     dia: '',
@@ -49,10 +49,13 @@ export class MiPerfilComponent {
         // Usuario se deslogueó, limpiar perfil
         this.perfil = null;
       }
-
+      if (this.usuario?.uid && this.isEspecialista(this.usuario)) {
+        this.disponibilidades = await this.authService.obtenerDisponibilidades(this.usuario.uid);
+      }
       console.log('Perfil cargado:', this.perfil);
     });
   }
+
     isPaciente(usuario: Usuario): usuario is Paciente {
     return usuario.perfil === 'paciente';
   }
@@ -75,19 +78,44 @@ export class MiPerfilComponent {
     try {
       await this.authService.guardarDisponibilidad(nueva);
        Swal.fire({
-                icon: 'success',
-                title: '¡Registro de disponibilidad exitoso!',
-                text: 'Registrado correctamente.',
-                confirmButtonColor: '#4193eb',
-              });
-          
+        icon: 'success',
+        title: '¡Registro de disponibilidad exitoso!',
+        text: 'Registrado correctamente.',
+        confirmButtonColor: '#4193eb',
+      });  
     } catch (err) {
-        Swal.fire({
-            icon: 'error',
-            title: '¡Registro exitoso!',
-            text: 'Especialista registrado correctamente.',
-            confirmButtonColor: 'red',
-          });
+      Swal.fire({
+        icon: 'error',
+        title: '¡Algo fallo!',
+        text: 'Error',
+        confirmButtonColor: 'red',
+      });
     }
+    this.disponibilidades = await this.authService.obtenerDisponibilidades(this.usuario.uid!);
+    this.disponibilidad = {
+      especialidad: '',
+      dia: '',
+      desde: '',
+      hasta: '',
+      duracion_turno: 30
+    };
   }
+
+  async eliminarDisponibilidad(id: number) {
+  try {
+    await this.authService.eliminarDisponibilidad(id);
+    this.disponibilidades = await this.authService.obtenerDisponibilidades(this.usuario.uid!);
+    Swal.fire({
+      icon: 'success',
+      title: 'Disponibilidad eliminada',
+      confirmButtonColor: '#4193eb',
+    });
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'No se pudo eliminar el horario',
+      confirmButtonColor: '#4193eb',
+    });
+  }
+}
 }

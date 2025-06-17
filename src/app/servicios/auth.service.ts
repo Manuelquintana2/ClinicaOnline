@@ -220,4 +220,22 @@ async getCurrentUser() {
 
     return true;
   }
+
+  async obtenerDisponibilidades(uid_especialista: string) {
+    const { data, error } = await this.supabase
+      .from('disponibilidades')
+      .select('*')
+      .eq('uid_especialista', uid_especialista);
+
+    if (error) throw error;
+    return data;
+  }
+  async eliminarDisponibilidad(id: number) {
+    const { error } = await this.supabase
+      .from('disponibilidades')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+  }
 }
