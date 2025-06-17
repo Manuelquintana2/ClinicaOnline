@@ -1,70 +1,68 @@
-<div class="solicitar-turno-container">
-  <h2>Solicitar Turno</h2>
+<div class="turno-container">
+  <!-- Selección de Pacientes (admin) -->
 
-  <!-- Si es admin, selecciona paciente -->
-  <div *ngIf="perfil === 'admin'" class="form-group">
-    <label for="paciente">Paciente</label>
-    <select id="paciente" [(ngModel)]="turno.uid_paciente">
-      <option value="" disabled selected>Seleccione un paciente</option>
-      <option *ngFor="let p of pacientes" [value]="p.uid">{{ p.nombre }} {{ p.apellido }}</option>
-    </select>
+  <div *ngIf="mostrarSeleccionPacientes" class="con">
+    <h2 class="section-title">Seleccionar Paciente</h2>
+    <div class="card-grid">
+      <div *ngFor="let paciente of pacientes" class="card-item" (click)="onPacienteSeleccionado(paciente)">
+        <h3>{{ paciente.nombre }} {{ paciente.apellido }}</h3>
+        <img src="{{paciente.imagen_perfil}}">
+        <p>{{ paciente.email }}</p>
+      </div>
+    </div>
   </div>
-
   
-  <!-- Selección de especialidad -->
-  <div class="form-group">
-    <label for="especialidad">Especialidad</label>
-    <select id="especialidad" [(ngModel)]="turno.especialidad" (change)="onEspecialidadSeleccionada(turno.especialidad)">
-      <option value="" disabled selected>Seleccione una especialidad</option>
-      <option *ngFor="let e of especialidades" [value]="e">{{ e }}</option>
-    </select>
-  </div>
-  <!-- Selección de especialista -->
-  <div class="form-group" *ngIf="turno.especialidad">
-      <label for="especialista">Especialista</label>
-      <select id="especialista" [(ngModel)]="turno.uid_especialista" (change)="onEspecialistaSeleccionado()">
-          <option value="" disabled selected>Seleccione un especialista</option>
-          <ng-container *ngFor="let esp of especialistas">
-              <option *ngIf="esp.especialidades?.includes(turno.especialidad)" [value]="esp.uid">
-                  {{ esp.nombre }} {{ esp.apellido }}
-                </option>
-            </ng-container>
-        </select>
+  <!-- Selección de Especialidades -->
+  <div *ngIf="mostrarEspecialidades" class="con">
+    <button class="back-btn" *ngIf="perfil === 'admin'" (click)="mostrarSeleccionPacientes = true; mostrarEspecialidades = false">
+      ← Volver a pacientes
+    </button>
+    <h2 class="section-title">Seleccionar Especialidad</h2>
+    <div class="card-grid">
+      <div *ngFor="let especialidad of especialidades" class="card-item" (click)="onEspecialidadSeleccionada(especialidad)">
+        <h3>{{ especialidad }}</h3>
+      </div>
     </div>
-    
-  <!-- Selección de fecha (lista de próximos 15 días disponibles) -->
-  <div class="form-group" *ngIf="fechasDisponibles.length > 0">
-    <label>Fecha</label>
-    <div class="fechas-lista">
-      <button 
-        *ngFor="let fecha of fechasDisponibles" 
-        type="button"
-        (click)="seleccionarFecha(fecha)" 
-        [class.selected]="turno.fecha === fecha">
-        {{ fecha }}
-      </button>
+  </div>
+  
+  <!-- Selección de Especialistas -->
+  <div *ngIf="mostrarEspecialistas" class="con">
+    <button class="back-btn" (click)="mostrarEspecialistas = false; mostrarEspecialidades = true">
+      ← Volver a especialidades
+    </button>
+    <h2 class="section-title">Seleccionar Especialista</h2>
+    <div class="card-grid">
+      <div *ngFor="let esp of especialistas" class="card-item" (click)="turno.uid_especialista = esp.uid!; onEspecialistaSeleccionado()">
+        <h3>{{ esp.nombre }} {{ esp.apellido }}</h3>
+        <p>{{ esp.email }}</p>
+      </div>
     </div>
   </div>
 
-  <!-- Selección de horario -->
-  <div class="form-group" *ngIf="horariosDisponibles.length > 0">
-    <label>Horario</label>
-    <div class="horarios-lista">
-      <button 
-        *ngFor="let hora of horariosDisponibles" 
-        type="button"
-        (click)="seleccionarHora(hora)" 
-        [class.selected]="turno.hora_inicio === hora">
-        {{ hora }}
-      </button>
-    </div>
-  </div>
+<!-- Selección de Fecha -->
+<div *ngIf="turno.uid_especialista && turno.especialidad" class="con">
+  <h2 class="section-title">Seleccionar Fecha</h2>
+  <input 
+    type="date" 
+    class="fecha-input"
+    [min]="fechaMin" 
+    [max]="fechaMax" 
+    [(ngModel)]="turno.fecha"
+    (change)="onFechaSeleccionada()"
+  />
+</div>
 
-  <!-- Botón para crear turno -->
-  <div class="form-group">
-    <button (click)="crearTurno()" [disabled]="!turno.fecha || !turno.hora_inicio || !turno.uid_especialista || !turno.especialidad || (perfil === 'admin' && !turno.uid_paciente)">
-      Solicitar Turno
+<!-- Mostrar horarios disponibles -->
+<div *ngIf="horariosDisponibles.length > 0" class="con">
+  <h2 class="section-title">Seleccionar Horario</h2>
+  <div class="horarios-grid">
+    <button 
+      *ngFor="let horario of horariosDisponibles" 
+      class="hora-btn"
+      (click)="seleccionarHorario(horario)">
+      {{ horario }}
     </button>
   </div>
 </div>
 
+</div>

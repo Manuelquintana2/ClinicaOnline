@@ -24,6 +24,12 @@ export class SolicitarTurnoComponent implements OnInit {
   usuarioLogueado!: Usuario;
   perfil: string = '';
   private sub!: Subscription;
+
+  fechaMin: string = '';
+  fechaMax: string = '';
+  mostrarSeleccionPacientes: boolean = false;
+  mostrarEspecialidades: boolean = false;
+  mostrarEspecialistas: boolean = false;
   
   turno : Turno= {
     especialidad: '',
@@ -39,6 +45,13 @@ export class SolicitarTurnoComponent implements OnInit {
   constructor(private authService: AuthService, private turnoService: TurnoService, private especialistaService : EspecialidadesService) {}
 
   async ngOnInit() {
+    const hoy = new Date();
+    this.fechaMin = hoy.toISOString().split('T')[0];
+
+    const fechaLimite = new Date();
+    fechaLimite.setDate(hoy.getDate() + 15);
+    this.fechaMax = fechaLimite.toISOString().split('T')[0];
+
     this.sub = this.authService.currentUser$.subscribe(async user => {
       console.log('Usuario actual:', user);
 
@@ -55,11 +68,11 @@ export class SolicitarTurnoComponent implements OnInit {
 
           if (this.perfil === 'admin') {
             this.pacientes = await this.turnoService.obtenerPacientes();
+            this.mostrarSeleccionPacientes = true;
+          } else {
+            this.mostrarEspecialidades = true;
           }
-        
-        } else {
-          console.error('No se pudo obtener el usuario por email:', user);
-        }
+        } 
       }
     });
   }
@@ -67,107 +80,95 @@ export class SolicitarTurnoComponent implements OnInit {
 async onEspecialidadSeleccionada(especialidad: string) {
   if (!especialidad) return;
 
+  this.turno.especialidad = especialidad;
   this.especialistas = await this.especialistaService.obtenerEspecialistasPorEspecialidad(especialidad);
 
-  this.turno.uid_especialista = '';
-  this.disponibilidades = [];
-  this.horariosDisponibles = [];
-  this.fechasDisponibles = [];
+  this.mostrarEspecialidades = false;
+  this.mostrarEspecialistas = true;
 }
+  onPacienteSeleccionado(paciente: Paciente) {
+    this.turno.uid_paciente = paciente.uid!;
+    this.mostrarSeleccionPacientes = false;
+    this.mostrarEspecialidades = true;
+  }
+
 
   async onEspecialistaSeleccionado() {
-    if (!this.turno.uid_especialista) return;
+    if (!this.turno.uid_especialista || !this.turno.especialidad) return;
 
-    this.disponibilidades = await this.authService.obtenerDisponibilidades(this.turno.uid_especialista);
-    this.fechasDisponibles = this.generarFechasDisponibles(this.disponibilidades);
+    // Simulamos la selección de fecha (esto lo vas a mejorar más adelante)
+    const fechaHoy = new Date().toISOString().split('T')[0]; // formato YYYY-MM-DD
+    this.turno.fecha = fechaHoy;
+
+    this.horariosDisponibles = await this.turnoService.obtenerHorariosDisponibles(
+      this.turno.uid_especialista,
+      this.turno.especialidad,
+      this.turno.fecha
+    );
   }
-
-  generarFechasDisponibles(disponibilidades: any[]): string[] {
-    const hoy = new Date();
-    const fechas: string[] = [];
-
-    for (let i = 0; i < 15; i++) {
-      const dia = new Date(hoy);
-      dia.setDate(hoy.getDate() + i);
-
-      const diaSemana = dia.toLocaleDateString('es-ES', { weekday: 'long' }).toLowerCase();
-      const disponible = disponibilidades.find(d => d.dia.toLowerCase() === diaSemana);
-
-      if (disponible) {
-        fechas.push(dia.toISOString().split('T')[0]);
-      }
-    }
-
-    return fechas;
-  }
-
-  seleccionarFecha(fecha: string) {
-    this.turno.fecha = fecha;
-    this.calcularHorarios(fecha);
-  }
-
-  calcularHorarios(fecha: string) {
-    const diaSemana = new Date(fecha).toLocaleDateString('es-ES', { weekday: 'long' }).toLowerCase();
-    const disponibilidad = this.disponibilidades.find(d => d.dia.toLowerCase() === diaSemana);
-
-    if (!disponibilidad) return;
-
-    const desde = disponibilidad.desde;
-    const hasta = disponibilidad.hasta;
-    const duracion = disponibilidad.duracion_turno;
-
-    const [hDesde, mDesde] = desde.split(':').map(Number);
-    const [hHasta, mHasta] = hasta.split(':').map(Number);
-
-    const horaInicio = new Date();
-    horaInicio.setHours(hDesde, mDesde, 0, 0);
-
-    const horaFin = new Date();
-    horaFin.setHours(hHasta, mHasta, 0, 0);
-
-    const horarios: string[] = [];
-
-    while (horaInicio < horaFin) {
-      const h = horaInicio.getHours().toString().padStart(2, '0');
-      const m = horaInicio.getMinutes().toString().padStart(2, '0');
-      horarios.push(`${h}:${m}`);
-      horaInicio.setMinutes(horaInicio.getMinutes() + duracion);
-    }
-
-    this.horariosDisponibles = horarios;
-  }
-
-  seleccionarHora(hora: string) {
+ async seleccionarHorario(hora: string): Promise<void> {
+  try {
     this.turno.hora_inicio = hora;
 
-    const [h, m] = hora.split(':').map(Number);
-    const horaFin = new Date();
-    horaFin.setHours(h, m + 30); // ajustar según duración real si es variable
+    // Suponiendo que obtuviste duración del turno antes
+    const duracion = await this.turnoService.obtenerDuracionTurno(
+      this.turno.uid_especialista,
+      this.turno.especialidad,
+      this.turno.fecha
+    );
 
-    const finH = horaFin.getHours().toString().padStart(2, '0');
-    const finM = horaFin.getMinutes().toString().padStart(2, '0');
-    this.turno.hora_fin = `${finH}:${finM}`;
+    if (!duracion) {
+      Swal.fire('Error', 'No se pudo calcular la duración del turno', 'error');
+      return;
+    }
+
+    // Calcular hora_fin
+    const [h, m] = hora.split(':').map(Number);
+    const inicio = new Date();
+    inicio.setHours(h, m, 0);
+
+    const fin = new Date(inicio.getTime() + duracion * 60000);
+    const horaFin = `${fin.getHours().toString().padStart(2, '0')}:${fin.getMinutes().toString().padStart(2, '0')}`;
+
+    this.turno.hora_fin = horaFin;
+
+    // Alta del turno
+    await this.turnoService.crearTurno(this.turno);
+
+    Swal.fire('Turno reservado', 'Tu turno fue registrado correctamente.', 'success');
+    this.resetTurno(); // si la tenés definida
+
+    return;
+  } catch (error) {
+    console.error('Error al reservar turno:', error);
+    Swal.fire('Error', 'Hubo un problema al registrar el turno', 'error');
+    return;
+  }
+}
+
+  async onFechaSeleccionada() {
+    if (!this.turno.fecha || !this.turno.uid_especialista || !this.turno.especialidad) return;
+
+    this.horariosDisponibles = await this.turnoService.obtenerHorariosDisponibles(
+      this.turno.uid_especialista,
+      this.turno.especialidad,
+      this.turno.fecha
+    );
   }
 
-  async crearTurno() {
-    try {
-      if (this.perfil === 'admin' && !this.turno.uid_paciente) {
-        Swal.fire('Error', 'Debe seleccionar un paciente', 'error');
-        return;
-      }
+  resetTurno() {
+    this.turno = {
+      especialidad: '',
+      uid_especialista: '',
+      uid_paciente: this.usuarioLogueado?.uid ?? '',
+      fecha: '',
+      hora_inicio: '',
+      hora_fin: '',
+    };
 
-      await this.turnoService.crearTurno(this.turno);
-      Swal.fire('Éxito', 'Turno creado correctamente', 'success');
-
-      // Reset
-      this.turno.fecha = '';
-      this.turno.hora_inicio = '';
-      this.turno.hora_fin = '';
-      this.fechasDisponibles = [];
-      this.horariosDisponibles = [];
-    } catch (error) {
-      console.error(error);
-      Swal.fire('Error', 'Hubo un problema al crear el turno', 'error');
-    }
+    this.mostrarSeleccionPacientes = this.perfil === 'admin';
+    this.mostrarEspecialidades = this.perfil !== 'admin';
+    this.mostrarEspecialistas = false;
+    this.horariosDisponibles = [];
   }
 }
