@@ -13,6 +13,7 @@ export const routes: Routes = [
     {path:"admin/seccion-usuarios", component: SeccionUsuariosComponent},
     {path:"admin/registro-admin", component: RegistroAdminComponent},
     {path: 'mi-perfil', loadComponent: () => import('./componentes/mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent) },
-     {path: 'solicitar-turno', loadComponent: () => import('./componentes/solicitar-turno/solicitar-turno.component').then(m => m.SolicitarTurnoComponent) },
+    {path: 'solicitar-turno', loadComponent: () => import('./componentes/solicitar-turno/solicitar-turno.component').then(m => m.SolicitarTurnoComponent) },
+    {path: 'mis-turnos', loadComponent: () => import('./componentes/mis-turnos/mis-turnos.component').then(m => m.MisTurnosComponent) },
 
 ];

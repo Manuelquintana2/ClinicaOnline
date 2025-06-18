@@ -32,6 +32,7 @@ export interface Horarios  {
 };
 
 export interface Turno  {
+  id?: string;
   uid_paciente: string;
   uid_especialista: string;
   especialidad: string;
@@ -39,5 +40,21 @@ export interface Turno  {
   hora_inicio: string; // formato 'HH:mm'
   hora_fin: string; // opcional o calculado
   estado?: string; // opcional, default es 'reservado'
+  comentario?: string;
+  resenia?: string;
+  encuesta?: string;
+  calificacion?: number;
+  historia?: HistoriaDatos;
+  nombre_especialista? :string;
+  nombre_paciente?:string;
 }
 
+export interface HistoriaDatos {
+    fijos: {
+        altura: number;
+        peso: number;
+        temperatura: number;
+        presion: number;
+    };
+    dinamicos?: { [key: string]: string };
+}

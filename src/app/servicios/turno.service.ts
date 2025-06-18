@@ -132,14 +132,30 @@ export class TurnoService {
       nombre_paciente: t.usuarios_clinica?.nombre + ' ' + t.usuarios_clinica?.apellido
     }));
   }
-  async obtenerNombrePorUid(uid: string): Promise<string> {
-    const { data, error } = await this.supabase
-      .from('usuarios_clinica')
-      .select('nombre, apellido')
-      .eq('uid', uid)
-      .single();
+  async actualizarEstadoTurno(uid: string, nuevoEstado: string, comentario?: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('turnos')
+      .update({ estado: nuevoEstado, comentario })
+      .eq('id', uid);
 
-    if (error || !data) return uid;
-    return `${data.nombre} ${data.apellido}`;
+    if (error) throw error;
+  }
+
+  async calificarTurno(idTurno: string, calificacion: number) {
+    const { error } = await this.supabase
+      .from('turnos')
+      .update({ calificacion: calificacion })
+      .eq('id', idTurno);
+
+    if (error) throw error;
+  }
+
+  async guardarEncuesta(idTurno: string, encuesta: string) {
+    const { error } = await this.supabase
+      .from('turnos')
+      .update({ encuesta: encuesta })
+      .eq('id', idTurno);
+
+    if (error) throw error;
   }
 }

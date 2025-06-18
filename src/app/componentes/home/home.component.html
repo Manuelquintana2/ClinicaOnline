@@ -21,7 +21,7 @@
       <button *ngIf="perfil === 'admin' || perfil === 'paciente'" class="btn home-btn" routerLink="/solicitar-turno">Solicitar Turno</button>
         <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin/seccion-usuarios">Todos los turnos</button>
           <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin/seccion-usuarios">Graficos</button>
-      <button *ngIf="perfil === 'especialista' || perfil === 'paciente'" class="btn home-btn" routerLink="/paciente/mis-turnos">Mis Turnos</button>
+      <button *ngIf="perfil === 'especialista' || perfil === 'paciente'" class="btn home-btn" routerLink="/mis-turnos">Mis Turnos</button>
       <button *ngIf="perfil === 'especialista'" class="btn home-btn" routerLink="/paciente/mis-turnos">Pacientes previos</button>
     </div>
   </div>
