@@ -162,7 +162,7 @@ export class SolicitarTurnoComponent implements OnInit {
   }
 
   private obtenerDiaSemanaSinDesfase(dateString: string): string {
-    const dias = ['sábado', 'domingo','lunes', 'martes', 'miércoles', 'jueves', 'viernes'];
+    const dias = ['domingo','lunes', 'martes', 'miércoles', 'jueves', 'viernes','sábado'];
     const [year, month, day] = dateString.split('-').map(Number);
     const date = new Date(year, month - 1, day);
 
