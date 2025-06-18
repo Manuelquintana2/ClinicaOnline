@@ -114,3 +114,33 @@
   cursor: pointer;
 }
 
+.fechas-container,
+.horarios-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.fecha-btn,
+.horario-btn {
+  background-color: #4193eb;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.fecha-btn:hover,
+.horario-btn:hover {
+  background-color: #0055cc;
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+
+

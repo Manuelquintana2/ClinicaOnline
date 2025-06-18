@@ -1,7 +1,7 @@
 <div class="turno-container">
   <!-- Selección de Pacientes (admin) -->
 
-  <div *ngIf="mostrarSeleccionPacientes" class="con">
+  <div *ngIf="estadoActual === 'seleccionarPaciente'" class="con">
     <h2 class="section-title">Seleccionar Paciente</h2>
     <div class="card-grid">
       <div *ngFor="let paciente of pacientes" class="card-item" (click)="onPacienteSeleccionado(paciente)">
@@ -13,8 +13,8 @@
   </div>
   
   <!-- Selección de Especialidades -->
-  <div *ngIf="mostrarEspecialidades" class="con">
-    <button class="back-btn" *ngIf="perfil === 'admin'" (click)="mostrarSeleccionPacientes = true; mostrarEspecialidades = false">
+  <div *ngIf="estadoActual === 'seleccionarEspecialidad'" class="con">
+    <button class="back-btn" *ngIf="perfil === 'admin'" (click)="estadoActual = 'seleccionarPaciente'">
       ← Volver a pacientes
     </button>
     <h2 class="section-title">Seleccionar Especialidad</h2>
@@ -26,8 +26,8 @@
   </div>
   
   <!-- Selección de Especialistas -->
-  <div *ngIf="mostrarEspecialistas" class="con">
-    <button class="back-btn" (click)="mostrarEspecialistas = false; mostrarEspecialidades = true">
+  <div *ngIf="estadoActual === 'seleccionarEspecialista'"  class="con">
+    <button class="back-btn" (click)="estadoActual = 'seleccionarEspecialidad'">
       ← Volver a especialidades
     </button>
     <h2 class="section-title">Seleccionar Especialista</h2>
@@ -40,20 +40,28 @@
   </div>
 
 <!-- Selección de Fecha -->
-<div *ngIf="turno.uid_especialista && turno.especialidad" class="con">
+<div *ngIf="turno.uid_especialista && turno.especialidad && estadoActual === 'seleccionarFecha'" class="con">
+  <button class="back-btn" (click)="estadoActual = 'seleccionarEspecialista'">
+    ← Volver a especialistas
+  </button>
   <h2 class="section-title">Seleccionar Fecha</h2>
-  <input 
-    type="date" 
-    class="fecha-input"
-    [min]="fechaMin" 
-    [max]="fechaMax" 
-    [(ngModel)]="turno.fecha"
-    (change)="onFechaSeleccionada()"
-  />
+
+  <div class="horarios-grid">
+    <button 
+      *ngFor="let fecha of fechasDisponibles" 
+      class="hora-btn"
+      (click)="onFechaSeleccionada(fecha.split('|')[0])">
+      {{ fecha.split('|')[1] }}
+    </button>
+  </div>
 </div>
 
+
 <!-- Mostrar horarios disponibles -->
-<div *ngIf="horariosDisponibles.length > 0" class="con">
+<div *ngIf="horariosDisponibles.length > 0 && estadoActual === 'seleccionarHorario'"  class="con">
+    <button class="back-btn" (click)="estadoActual = 'seleccionarFecha'">
+    ← Volver a Fechas
+  </button>
   <h2 class="section-title">Seleccionar Horario</h2>
   <div class="horarios-grid">
     <button 
