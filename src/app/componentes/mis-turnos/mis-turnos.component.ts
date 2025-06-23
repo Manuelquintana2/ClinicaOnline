@@ -47,6 +47,8 @@ export class MisTurnosComponent {
           this.turnos = await this.turnoService.obtenerTurnosPaciente(this.uidUsuario!);
         } else if (this.perfil === 'especialista') {
           this.turnos = await this.turnoService.obtenerTurnosEspecialista(this.uidUsuario!);
+        } else if (this.perfil === 'admin') {
+          this.turnos = await this.turnoService.obtenerTodosLosTurnos();
         }
       } else {
         this.perfil = null;
@@ -56,6 +58,7 @@ export class MisTurnosComponent {
       this.cargando = false;
     });
   }
+
 
   cancelarTurno(turno: Turno) {
     this.turnoSeleccionado = turno;

@@ -118,27 +118,56 @@ export class TurnoService {
       nombre_especialista: t.usuarios_clinica?.nombre + ' ' + t.usuarios_clinica?.apellido
     }));
   }
-
+  
   async obtenerTurnosEspecialista(uid: string): Promise<Turno[]> {
     const { data, error } = await this.supabase
-      .from('turnos')
-      .select(`*, usuarios_clinica!uid_paciente(nombre, apellido)`)
-      .eq('uid_especialista', uid);
-
+    .from('turnos')
+    .select(`*, usuarios_clinica!uid_paciente(nombre, apellido)`)
+    .eq('uid_especialista', uid);
+    
     if (error) throw error;
-
+    
     return data.map(t => ({
       ...t,
       nombre_paciente: t.usuarios_clinica?.nombre + ' ' + t.usuarios_clinica?.apellido
     }));
   }
+  async obtenerTodosLosTurnos(): Promise<Turno[]> {
+   const { data, error } = await this.supabase
+  .from('turnos')
+  .select(`
+    *,
+    usuarios_clinica_paciente:usuarios_clinica!uid_paciente(nombre, apellido, imagen_perfil),
+    usuarios_clinica_especialista:usuarios_clinica!uid_especialista(nombre, apellido, imagen_perfil)
+  `);
+
+if (error) throw error;
+
+return data.map(t => ({
+  ...t,
+  nombre_paciente: t.usuarios_clinica_paciente?.nombre + ' ' + t.usuarios_clinica_paciente?.apellido,
+  imagen_paciente: t.usuarios_clinica_paciente?.imagen_perfil,
+  nombre_especialista: t.usuarios_clinica_especialista?.nombre + ' ' + t.usuarios_clinica_especialista?.apellido,
+  imagen_especialista: t.usuarios_clinica_especialista?.imagen_perfil,
+}));
+
+  }
   async actualizarEstadoTurno(uid: string, nuevoEstado: string, comentario?: string): Promise<void> {
-    const { error } = await this.supabase
+    if(nuevoEstado === 'finalizado'){
+       const { error } = await this.supabase
       .from('turnos')
-      .update({ estado: nuevoEstado, comentario })
+      .update({ estado: nuevoEstado, resenia: comentario })
       .eq('id', uid);
 
     if (error) throw error;
+    }else{
+      const { error } = await this.supabase
+        .from('turnos')
+        .update({ estado: nuevoEstado, comentario })
+        .eq('id', uid);
+  
+      if (error) throw error;
+    }
   }
 
   async calificarTurno(idTurno: string, calificacion: number) {
@@ -158,4 +187,6 @@ export class TurnoService {
 
     if (error) throw error;
   }
+
+
 }

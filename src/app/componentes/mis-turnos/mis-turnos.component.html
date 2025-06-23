@@ -21,6 +21,8 @@
             <th>Especialidad</th>
             <th *ngIf="perfil === 'paciente'">Especialista</th>
             <th *ngIf="perfil === 'especialista'">Paciente</th>
+            <th *ngIf="perfil === 'admin'">Especialista</th>
+            <th *ngIf="perfil === 'admin'">Paciente</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
@@ -32,22 +34,37 @@
             <td>{{ turno.especialidad }}</td>
             <td *ngIf="perfil === 'paciente'">{{ turno.nombre_especialista }}</td>
             <td *ngIf="perfil === 'especialista'">{{ turno.nombre_paciente }}</td>
+            <td *ngIf="perfil === 'admin'">{{ turno.nombre_especialista }}</td>
+            <td *ngIf="perfil === 'admin'">{{ turno.nombre_paciente }}</td>
             <td>{{ turno.estado }}</td>
             <td>
               <ng-container [ngSwitch]="perfil">
+                <ng-container *ngSwitchCase="'admin'">
+                <button
+                class="btn btn-danger btn-sm"
+                *ngIf="turno.estado === 'reservado'"
+                (click)="cancelarTurno(turno)"
+                >
+                Cancelar
+                </button>
+                <button class="btn btn-admin btn-sm" *ngIf="turno.comentario" (click)="verComentario(turno)">Ver comentario</button>
+                <button class="btn btn-admin btn-sm" *ngIf="turno.resenia" (click)="verResenia(turno)">Ver reseña</button>
+                </ng-container>
+
                 <!-- PACIENTE -->
                 <ng-container *ngSwitchCase="'paciente'">
                   <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'reservado'" (click)="cancelarTurno(turno)">Cancelar</button>
                   <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'finalizado' && !turno.calificacion" (click)="calificarTurno(turno)">Calificar</button>
                   <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'finalizado' && !turno.encuesta" (click)="completarEncuesta(turno)">Encuesta</button>
                   <button class="btn btn-admin btn-sm" *ngIf="turno.comentario" (click)="verComentario(turno)">Ver comentario</button>
+                  <button class="btn btn-admin btn-sm" *ngIf="turno.resenia" (click)="verResenia(turno)">Ver reseña</button>
                 </ng-container>
 
                 <!-- ESPECIALISTA -->
                 <ng-container *ngSwitchCase="'especialista'">
                   <button class="btn btn-habilitar btn-sm" *ngIf="turno.estado === 'reservado'" (click)="aceptarTurno(turno)">Aceptar</button>
                   <button class="btn btn-inhabilitar btn-sm" *ngIf="turno.estado === 'reservado'" (click)="rechazarTurno(turno)">Rechazar</button>
-                  <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'reservado'" (click)="cancelarTurno(turno)">Cancelar</button>
+                  <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'aceptado'" (click)="cancelarTurno(turno)">Cancelar</button>
                   <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'aceptado'" (click)="finalizarTurno(turno)">Finalizar</button>
                   <button class="btn btn-admin btn-sm" *ngIf="turno.resenia" (click)="verResenia(turno)">Ver Reseña</button>
                   <button class="btn btn-admin btn-sm" *ngIf="turno.comentario" (click)="verComentario(turno)">Ver comentario</button>
