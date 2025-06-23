@@ -108,30 +108,34 @@ export class TurnoService {
   async obtenerTurnosPaciente(uid: string): Promise<Turno[]> {
     const { data, error } = await this.supabase
       .from('turnos')
-      .select(`*, usuarios_clinica!uid_especialista(nombre, apellido)`)
+      .select(`*, usuarios_clinica!uid_especialista(nombre, apellido, imagen_perfil)`)
       .eq('uid_paciente', uid);
 
     if (error) throw error;
 
     return data.map(t => ({
       ...t,
-      nombre_especialista: t.usuarios_clinica?.nombre + ' ' + t.usuarios_clinica?.apellido
+      nombre_especialista: t.usuarios_clinica?.nombre + ' ' + t.usuarios_clinica?.apellido,
+      imagen_especialista: t.usuarios_clinica?.imagen_perfil
     }));
   }
-  
+
+    
   async obtenerTurnosEspecialista(uid: string): Promise<Turno[]> {
     const { data, error } = await this.supabase
-    .from('turnos')
-    .select(`*, usuarios_clinica!uid_paciente(nombre, apellido)`)
-    .eq('uid_especialista', uid);
-    
+      .from('turnos')
+      .select(`*, usuarios_clinica!uid_paciente(nombre, apellido, imagen_perfil)`)
+      .eq('uid_especialista', uid);
+
     if (error) throw error;
-    
+
     return data.map(t => ({
       ...t,
-      nombre_paciente: t.usuarios_clinica?.nombre + ' ' + t.usuarios_clinica?.apellido
+      nombre_paciente: t.usuarios_clinica?.nombre + ' ' + t.usuarios_clinica?.apellido,
+      imagen_paciente: t.usuarios_clinica?.imagen_perfil
     }));
   }
+
   async obtenerTodosLosTurnos(): Promise<Turno[]> {
    const { data, error } = await this.supabase
   .from('turnos')

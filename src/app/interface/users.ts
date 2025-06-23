@@ -47,6 +47,8 @@ export interface Turno  {
   historia?: HistoriaDatos;
   nombre_especialista? :string;
   nombre_paciente?:string;
+  imagen_paciente?:string;
+  imagen_especialista?:string;
 }
 
 export interface HistoriaDatos {
