@@ -51,6 +51,7 @@
         </div>
 
         <div class="card-body">
+          <p *ngIf="perfil === 'admin'" class="mb-1"><strong>Paciente:</strong> {{ turno.nombre_paciente }}</p>
           <p class="mb-1"><strong>Fecha:</strong> {{ turno.fecha }}</p>
           <p class="mb-1"><strong>Hora:</strong> {{ turno.hora_inicio }} - {{ turno.hora_fin }}</p>
           <p class="mb-1"><strong>Especialidad:</strong> {{ turno.especialidad }}</p>
@@ -87,6 +88,7 @@
               <button class="btn btn-inhabilitar btn-sm" *ngIf="turno.estado === 'reservado'" (click)="rechazarTurno(turno)">Rechazar</button>
               <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'aceptado'" (click)="cancelarTurno(turno)">Cancelar</button>
               <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'aceptado'" (click)="finalizarTurno(turno)">Finalizar</button>
+              <button class="btn btn-admin btn-sm" *ngIf="turno.estado === 'finalizado' && turno.historia_clinica === null" (click)="historiaClinica(turno)">Completar historia clinica</button>
               <button class="btn btn-admin btn-sm" *ngIf="turno.resenia" (click)="verResenia(turno)">Ver Reseña</button>
               <button class="btn btn-admin btn-sm" *ngIf="turno.comentario" (click)="verComentario(turno)">Ver comentario</button>
             </ng-container>
@@ -207,4 +209,72 @@
     </div>
   </div>
 </div>
+<!-- Modal Historia Clínica -->
+<div
+  class="modal fade"
+  id="modalHistoriaClinica"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="modalHistoriaClinicaLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalHistoriaClinicaLabel">Historia Clínica</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Datos fijos -->
+        <div class="mb-3">
+          <label class="form-label">Datos Fijos</label>
+          <div class="row">
+            <div class="col">
+              <input type="number" [(ngModel)]="altura" class="form-control" placeholder="Altura (cm)" />
+            </div>
+            <div class="col">
+              <input type="number" [(ngModel)]="peso" class="form-control" placeholder="Peso (kg)" />
+            </div>
+            <div class="col">
+              <input type="number" [(ngModel)]="temperatura" class="form-control" placeholder="Temperatura (°C)" />
+            </div>
+            <div class="col">
+              <input type="text" [(ngModel)]="presion" class="form-control" placeholder="Presión (Ej: 120/80)" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos adicionales (dinámicos) -->
+        <div class="mb-2">
+          <label class="form-label">Datos adicionales</label>
+        </div>
+
+        <div *ngFor="let dato of datosDinamicos; let i = index" class="row mb-2">
+          <div class="col-5">
+            <input type="text" [(ngModel)]="dato.clave" class="form-control" placeholder="Ej: Glucosa" />
+          </div>
+          <div class="col-5">
+            <input type="text" [(ngModel)]="dato.valor" class="form-control" placeholder="Ej: 90 mg/dL" />
+          </div>
+          <div class="col-2">
+            <button class="btn btn-danger w-100" (click)="eliminarDato(i)">🗑️</button>
+          </div>
+        </div>
+
+        <div class="text-end">
+          <button class="btn btn-secondary" (click)="agregarDato()">➕ Agregar dato</button>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-admin" (click)="guardarHistoriaClinica()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 

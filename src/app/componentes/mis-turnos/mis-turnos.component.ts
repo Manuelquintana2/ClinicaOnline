@@ -15,11 +15,18 @@ import * as bootstrap from 'bootstrap';
   styleUrl: './mis-turnos.component.css'
 })
 export class MisTurnosComponent {
+  historiaGeneral: string = '';
+  datosDinamicos: { clave: string; valor: string }[] = [];
   perfil: string | null = null;
   cargando: boolean = true;
   private sub!: Subscription;
   turnos: Turno[] = [];
   uidUsuario: string | null = null;
+  altura! : number;
+  peso! : number;
+  temperatura! : number;
+  presion! : number;
+
     // Modal control
   turnoSeleccionado: Turno | null = null;
   motivo: string = '';
@@ -59,7 +66,60 @@ export class MisTurnosComponent {
     });
   }
 
+  historiaClinica(turno: Turno) {
+  this.turnoSeleccionado = turno;
+  this.historiaGeneral = '';
+  this.datosDinamicos = [{ clave: '', valor: '' }];
+  this.abrirModalHistoria();
+}
 
+abrirModalHistoria() {
+  const modal = new bootstrap.Modal(document.getElementById('modalHistoriaClinica')!);
+  modal.show();
+}
+
+cerrarModalHistoria() {
+  const modalEl = document.getElementById('modalHistoriaClinica');
+  const instance = bootstrap.Modal.getInstance(modalEl!);
+  instance?.hide();
+}
+
+agregarDato() {
+  this.datosDinamicos.push({ clave: '', valor: '' });
+}
+
+eliminarDato(index: number) {
+  this.datosDinamicos.splice(index, 1);
+}
+
+async guardarHistoriaClinica() {
+  if (!this.turnoSeleccionado) return;
+
+  const historia = {
+     fijos: {
+      altura: Number(this.altura),
+      peso: Number(this.peso),
+      temperatura: Number(this.temperatura),
+      presion: Number(this.presion),
+    },
+    dinamicos: Object.fromEntries(
+      this.datosDinamicos
+        .filter(d => d.clave && d.valor)
+        .map(d => [d.clave, d.valor])
+    ),
+  };
+
+  try {
+    const { error } = await this.turnoService.guardarHistoriaClinica(this.turnoSeleccionado.id!, historia);
+    if (error) throw error;
+
+  this.turnoSeleccionado.historia_clinica = historia;
+
+    this.cerrarModalHistoria();
+  } catch (error) {
+    console.error('Error al guardar historia clínica:', error);
+  }
+}
   cancelarTurno(turno: Turno) {
     this.turnoSeleccionado = turno;
     this.modalAccion = 'cancelar';

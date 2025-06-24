@@ -1,61 +1,64 @@
 <div class="seccion-usuarios-container">
   <div class="seccion-usuarios-box">
-    
-      <div class="mb-3 text-end">
-       <button class="btn btn-admin" routerLink="/home">Volver al home</button>
-     </div>
-      <div class="mb-3 text-end">
-        <button class="btn btn-admin" routerLink="/admin/registro-admin">Crear Administrador</button>
-      </div>
-      <div class="mb-3 text-end">
-        <button class="btn btn-admin" routerLink="/registro">Crear Usuario</button>
-      </div>
+
+    <div class="mb-3 text-end">
+      <button class="btn btn-admin" routerLink="/home">Volver al home</button>
+    </div>
+    <div class="mb-3 text-end">
+      <button class="btn btn-admin" routerLink="/admin/registro-admin">Crear Administrador</button>
+    </div>
+    <div class="mb-3 text-end">
+      <button class="btn btn-admin" (click)="exportarUsuariosExcel()">Descargar Excel</button>
+    </div>
+    <div class="mb-3 text-end">
+      <button class="btn btn-admin" routerLink="/registro">Crear Usuario</button>
+    </div>
+
     <h2 class="mb-4 text-celeste">Gestión de Usuarios</h2>
 
     <div *ngIf="usuarios.length > 0; else noData">
-      <div class="table-responsive">
-        <table class="table table-dark table-bordered">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Email</th>
-              <th>Perfil</th>
-              <th>Estado</th>
-              <th *ngIf="mostrarAcciones">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let usuario of usuarios">
-              <td>{{ usuario.nombre }}</td>
-              <td>{{ usuario.apellido }}</td>
-              <td>{{ usuario.email }}</td>
-              <td>{{ usuario.perfil }}</td>
-              <td>
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-4" *ngFor="let usuario of usuarios">
+          <div class="card h-100">
+            <div class="card-header text-center">
+              <img
+                [src]="usuario.imagen_perfil || 'assets/default-profile.png'"
+                alt="Usuario"
+                class="rounded-circle"
+                style="width: 100px; height: 100px; object-fit: cover;"
+              />
+            </div>
+            <div class="card-body">
+              <h5 class="card-title text-celeste">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
+              <p class="card-text"><strong>Email:</strong> {{ usuario.email }}</p>
+              <p class="card-text"><strong>Perfil:</strong> {{ usuario.perfil }}</p>
+              <p class="card-text">
+                <strong>Estado:</strong>
                 <span *ngIf="isEspecialista(usuario)">
                   {{ usuario.esta_habilitado ? 'Habilitado' : 'Inhabilitado' }}
                 </span>
                 <span *ngIf="!isEspecialista(usuario)">
                   N/A
                 </span>
-              </td>
-              <td *ngIf="isEspecialista(usuario)">
-                <button
-                  class="btn btn-sm"
-                  [ngClass]="usuario.esta_habilitado ? 'btn-inhabilitar' : 'btn-habilitar'"
-                  (click)="toggleHabilitacion(usuario)"
-                >
-                  {{ usuario.esta_habilitado ? 'Inhabilitar' : 'Habilitar' }}
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </p>
+            </div>
+            <div class="card-footer text-center" *ngIf="isEspecialista(usuario)">
+              <button
+                class="btn btn-sm"
+                [ngClass]="usuario.esta_habilitado ? 'btn-inhabilitar' : 'btn-habilitar'"
+                (click)="toggleHabilitacion(usuario)"
+              >
+                {{ usuario.esta_habilitado ? 'Inhabilitar' : 'Habilitar' }}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <ng-template #noData>
       <p class="text-center text-muted">No se encontraron usuarios.</p>
     </ng-template>
+
   </div>
 </div>

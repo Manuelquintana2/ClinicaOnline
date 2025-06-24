@@ -3,6 +3,8 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../servicios/auth.service';
 import { Especialista, Usuario } from '../../interface/users';
 import { CommonModule } from '@angular/common';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-seccion-usuarios',
@@ -45,6 +47,23 @@ export class SeccionUsuariosComponent implements OnInit {
 
   irARegistroAdmin() {
     this.router.navigate(['/registrarAdmin']);
+  }
+
+  exportarUsuariosExcel() {
+    const datosExportar = this.usuarios.map(u => ({
+      Nombre: u.nombre,
+      Apellido: u.apellido,
+      Email: u.email,
+      Perfil: u.perfil,
+      Estado: this.isEspecialista(u) ? (u.esta_habilitado ? 'Habilitado' : 'Inhabilitado') : 'N/A'
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(datosExportar);
+    const workbook: XLSX.WorkBook = { Sheets: { 'Usuarios': worksheet }, SheetNames: ['Usuarios'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    const blob: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    FileSaver.saveAs(blob, 'usuarios.xlsx');
   }
 
   get mostrarAcciones(): boolean {

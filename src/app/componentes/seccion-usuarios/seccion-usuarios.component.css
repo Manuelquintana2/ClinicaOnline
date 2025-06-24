@@ -27,16 +27,6 @@
     0 0 20px 8px rgba(65, 147, 235, 0.5);
 }
 
-.table-dark {
-  background-color: #2c275a;
-}
-
-.table-dark th,
-.table-dark td {
-  border-color: #4193eb;
-  vertical-align: middle;
-}
-
 .btn-habilitar {
   color: white;
   background-color: #28a745;
@@ -69,3 +59,18 @@
 .text-celeste {
   color: #4193eb;
 }
+.card {
+  transition: transform 0.2s ease;
+  background-color: rgb(32, 33, 36);
+}
+.card .text-celeste {
+  color: #ffffff;
+}
+.card-text{
+  color: #ffffff;
+}
+.card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+

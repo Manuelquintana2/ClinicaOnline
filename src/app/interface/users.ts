@@ -32,6 +32,7 @@ export interface Horarios  {
 };
 
 export interface Turno  {
+  expandir?: boolean;
   id?: string;
   uid_paciente: string;
   uid_especialista: string;
@@ -44,7 +45,7 @@ export interface Turno  {
   resenia?: string;
   encuesta?: string;
   calificacion?: number;
-  historia?: HistoriaDatos;
+  historia_clinica?: HistoriaDatos;
   nombre_especialista? :string;
   nombre_paciente?:string;
   imagen_paciente?:string;

@@ -27,7 +27,12 @@
 
       <ng-container *ngIf="isPaciente(usuario)">
         <p><strong>Obra Social:</strong> {{ usuario.obra_social }}</p>
+        <button class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#modalHistoriasClinicas">
+          Ver historias clínicas
+        </button>
+
       </ng-container>
+      
 
       <ng-container *ngIf="isEspecialista(usuario)">
         <p><strong>Especialidades:</strong> {{ usuario.especialidades.join(', ') }}</p>
@@ -102,3 +107,47 @@
   </div>
 </div>
 </div>
+<div class="modal fade" id="modalHistoriasClinicas" tabindex="-1" aria-labelledby="modalHistoriasClinicasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalHistoriasClinicasLabel">Historias Clínicas</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="turnosConHistoria.length === 0">
+          <p>No hay historias clínicas disponibles.</p>
+        </div>
+        <div *ngFor="let turno of turnosConHistoria; let i = index" class="mb-3 border p-3 rounded bg-secondary">
+          <h6>Turno {{ i + 1 }}</h6>
+          <p><strong>Fecha:</strong> {{ turno.fecha }}</p>
+          <p><strong>Especialista:</strong> {{ turno.nombre_especialista }}</p>
+          <p><strong>Especialidad:</strong> {{ turno.especialidad }}</p>
+          <button class="btn btn-sm btn-outline-light" type="button" (click)="turno.expandir = !turno.expandir">
+            {{ turno.expandir ? 'Ocultar' : 'Ver historia clínica' }}
+          </button>
+         <div *ngIf="turno.expandir && turno.historia_clinica" class="mt-3">
+        <h6 class="text-celeste">Datos fijos</h6>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item bg-dark text-white"><strong>Altura:</strong> {{ turno.historia_clinica!.fijos.altura }} cm</li>
+          <li class="list-group-item bg-dark text-white"><strong>Peso:</strong> {{ turno.historia_clinica!.fijos.peso }} kg</li>
+          <li class="list-group-item bg-dark text-white"><strong>Temperatura:</strong> {{ turno.historia_clinica!.fijos.temperatura }} °C</li>
+          <li class="list-group-item bg-dark text-white"><strong>Presión:</strong> {{ turno.historia_clinica!.fijos.presion }} mmHg</li>
+        </ul>
+
+        <div *ngIf="turno.historia_clinica!.dinamicos && (turno.historia_clinica!.dinamicos | keyvalue).length > 0" class="mt-3">
+          <h6 class="text-celeste">Datos adicionales</h6>
+          <ul class="list-group list-group-flush">
+            <li *ngFor="let dato of turno.historia_clinica!.dinamicos | keyvalue" class="list-group-item bg-dark text-white">
+              <strong>{{ dato.key }}:</strong> {{ dato.value }}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+

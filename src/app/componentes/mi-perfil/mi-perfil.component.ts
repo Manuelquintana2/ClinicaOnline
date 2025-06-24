@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../servicios/auth.service';
 import { Subscription } from 'rxjs';
-import { Especialista, Paciente, Usuario } from '../../interface/users';
+import { Especialista, Paciente, Turno, Usuario } from '../../interface/users';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { TurnoService } from '../../servicios/turno.service';
 
 @Component({
   selector: 'app-mi-perfil',
@@ -13,6 +14,7 @@ import Swal from 'sweetalert2';
   styleUrl: './mi-perfil.component.css'
 })
 export class MiPerfilComponent {
+  turnosConHistoria: Turno[] = [];
 
   perfil: string | null = null;
   cargando: boolean = true;
@@ -29,7 +31,7 @@ export class MiPerfilComponent {
     duracion_turno: 30
   };
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,private turnosService:TurnoService) {
   }
   ngOnInit() {
     this.sub = this.authService.currentUser$.subscribe(async user => {
@@ -51,6 +53,12 @@ export class MiPerfilComponent {
       }
       if (this.usuario?.uid && this.isEspecialista(this.usuario)) {
         this.disponibilidades = await this.authService.obtenerDisponibilidades(this.usuario.uid);
+      }
+      else{
+        if (this.usuario?.uid && this.isPaciente(this.usuario)) {
+          this.turnosConHistoria = await this.turnosService.obtenerTurnosFinalizadosConHistoria(this.usuario.uid);
+          this.turnosConHistoria.forEach(t => (t.expandir = false));
+        }
       }
       console.log('Perfil cargado:', this.perfil);
     });

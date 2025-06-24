@@ -145,15 +145,15 @@ export class TurnoService {
     usuarios_clinica_especialista:usuarios_clinica!uid_especialista(nombre, apellido, imagen_perfil)
   `);
 
-if (error) throw error;
+  if (error) throw error;
 
-return data.map(t => ({
-  ...t,
-  nombre_paciente: t.usuarios_clinica_paciente?.nombre + ' ' + t.usuarios_clinica_paciente?.apellido,
-  imagen_paciente: t.usuarios_clinica_paciente?.imagen_perfil,
-  nombre_especialista: t.usuarios_clinica_especialista?.nombre + ' ' + t.usuarios_clinica_especialista?.apellido,
-  imagen_especialista: t.usuarios_clinica_especialista?.imagen_perfil,
-}));
+  return data.map(t => ({
+    ...t,
+    nombre_paciente: t.usuarios_clinica_paciente?.nombre + ' ' + t.usuarios_clinica_paciente?.apellido,
+    imagen_paciente: t.usuarios_clinica_paciente?.imagen_perfil,
+    nombre_especialista: t.usuarios_clinica_especialista?.nombre + ' ' + t.usuarios_clinica_especialista?.apellido,
+    imagen_especialista: t.usuarios_clinica_especialista?.imagen_perfil,
+  }));
 
   }
   async actualizarEstadoTurno(uid: string, nuevoEstado: string, comentario?: string): Promise<void> {
@@ -191,6 +191,32 @@ return data.map(t => ({
 
     if (error) throw error;
   }
+async obtenerTurnosFinalizadosConHistoria(uid_paciente: string): Promise<Turno[]> {
+  const { data, error } = await this.supabase
+    .from('turnos')
+    .select(`
+      *,
+      usuarios_clinica_especialista:usuarios_clinica!uid_especialista(uid, nombre, apellido)
+    `)
+    .eq('uid_paciente', uid_paciente)
+    .eq('estado', 'finalizado')
+    .not('historia_clinica', 'is', null);
 
+  if (error) {
+    console.error('Error al obtener turnos finalizados con historia clínica:', error);
+    return [];
+  }
 
+  return data.map(t => ({
+    ...t,
+    nombre_especialista: `${t.usuarios_clinica_especialista?.nombre ?? ''} ${t.usuarios_clinica_especialista?.apellido ?? ''}`.trim(),
+  }));
+}
+
+  async guardarHistoriaClinica(turnoId: string, historia: any) {
+    return await this.supabase
+      .from('turnos')
+      .update({ historia_clinica: historia }) // o 'historiaClinica', según tu modelo
+      .eq('id', turnoId);
+  }
 }
