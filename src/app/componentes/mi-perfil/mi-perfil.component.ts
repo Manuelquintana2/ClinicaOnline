@@ -6,13 +6,23 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { TurnoService } from '../../servicios/turno.service';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
+declare module 'jspdf' {
+  interface jsPDF {
+    lastAutoTable: {
+      finalY: number;
+    };
+  }
+}
 @Component({
   selector: 'app-mi-perfil',
   imports: [CommonModule,FormsModule],
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css'
 })
+
 export class MiPerfilComponent {
   turnosConHistoria: Turno[] = [];
 
@@ -64,7 +74,78 @@ export class MiPerfilComponent {
     });
   }
 
-    isPaciente(usuario: Usuario): usuario is Paciente {
+   generarPDFHistoriaClinica(turnos: Turno[], paciente: Paciente) {
+    const doc = new jsPDF();
+    const logo = new Image();
+    logo.src = '/favicon.png';
+
+    const fechaEmision = new Date().toLocaleDateString();
+
+    logo.onload = () => {
+      doc.addImage(logo, 'PNG', 10, 10, 20, 20);
+
+      doc.setFontSize(16);
+      doc.text('Historia Clínica del Paciente', 105, 15, { align: 'center' });
+
+      doc.setFontSize(10);
+      doc.text(`Fecha de emisión: ${fechaEmision}`, 200, 10, { align: 'right' });
+
+      // Datos del paciente
+      doc.setFontSize(12);
+      doc.text(`Nombre: ${paciente.nombre} ${paciente.apellido}`, 10, 40);
+      doc.text(`Edad: ${paciente.edad}  -  DNI: ${paciente.dni}`, 10, 47);
+      doc.text(`Email: ${paciente.email}`, 10, 54);
+      doc.text(`Obra Social: ${paciente.obra_social ?? 'N/A'}`, 10, 61);
+
+      let yOffset = 70;
+
+      turnos.forEach((turno, index) => {
+        doc.setFontSize(13);
+        doc.text(`Turno ${index + 1}`, 10, yOffset);
+        yOffset += 6;
+
+        doc.setFontSize(11);
+        doc.text(`Fecha: ${new Date(turno.fecha).toLocaleDateString()}`, 10, yOffset);
+        yOffset += 6;
+        doc.text(`Especialista: ${turno.nombre_especialista ?? 'Desconocido'}`, 10, yOffset);
+        yOffset += 6;
+        doc.text(`Especialidad: ${turno.especialidad}`, 10, yOffset);
+        yOffset += 8;
+
+        const fijos = turno.historia_clinica?.fijos;
+        const dinamicos = turno.historia_clinica?.dinamicos ?? {};
+
+        autoTable(doc, {
+          startY: yOffset,
+          head: [['Altura', 'Peso', 'Temperatura', 'Presión']],
+          body: [[
+            fijos?.altura ?? '',
+            fijos?.peso ?? '',
+            fijos?.temperatura ?? '',
+            fijos?.presion ?? ''
+          ]]
+        });
+
+        yOffset = (doc as any).lastAutoTable.finalY + 4;
+
+        const dinamicoData = Object.entries(dinamicos).map(([key, value]) => [key, value]);
+
+        if (dinamicoData.length > 0) {
+          autoTable(doc, {
+            startY: yOffset,
+            head: [['Campo', 'Valor']],
+            body: dinamicoData
+          });
+          yOffset = (doc as any).lastAutoTable.finalY + 10;
+        } else {
+          yOffset += 10;
+        }
+      });
+
+      doc.save(`Historia_Clinica_${paciente.nombre}_${paciente.apellido}.pdf`);
+    };
+  }
+  isPaciente(usuario: Usuario): usuario is Paciente {
     return usuario.perfil === 'paciente';
   }
 

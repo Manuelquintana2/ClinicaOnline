@@ -26,18 +26,27 @@
   </div>
   
   <!-- Selección de Especialistas -->
-  <div *ngIf="estadoActual === 'seleccionarEspecialista'"  class="con">
-    <button class="back-btn" (click)="estadoActual = 'seleccionarEspecialidad'">
-      ← Volver a especialidades
-    </button>
-    <h2 class="section-title">Seleccionar Especialista</h2>
-    <div class="card-grid">
-      <div *ngFor="let esp of especialistas" class="card-item" (click)="turno.uid_especialista = esp.uid!; onEspecialistaSeleccionado()">
-        <h3>{{ esp.nombre }} {{ esp.apellido }}</h3>
-        <p>{{ esp.email }}</p>
-      </div>
+ <div *ngIf="estadoActual === 'seleccionarEspecialista'" class="con">
+  <button class="back-btn" (click)="estadoActual = 'seleccionarEspecialidad'">
+    ← Volver a especialidades
+  </button>
+  <h2 class="section-title">Seleccionar Especialista</h2>
+  <div class="card-grid">
+    <div *ngFor="let esp of especialistas" class="card-item" (click)="turno.uid_especialista = esp.uid!; onEspecialistaSeleccionado()">
+      
+      <img 
+        *ngIf="esp.imagen_perfil" 
+        [src]="esp.imagen_perfil" 
+        alt="Imagen de {{ esp.nombre }}" 
+        class="perfil-img-mini" 
+      />
+      
+      <h3>{{ esp.nombre }} {{ esp.apellido }}</h3>
+      <p>{{ esp.email }}</p>
     </div>
   </div>
+</div>
+
 
 <!-- Selección de Fecha -->
 <div *ngIf="turno.uid_especialista && turno.especialidad && estadoActual === 'seleccionarFecha'" class="con">

@@ -30,6 +30,9 @@
         <button class="btn btn-info mt-2" data-bs-toggle="modal" data-bs-target="#modalHistoriasClinicas">
           Ver historias clínicas
         </button>
+         <button class="btn btn-info mt-3" (click)="generarPDFHistoriaClinica(turnosConHistoria, usuario)">
+          Descargar Historia Clínica en PDF
+        </button>
 
       </ng-container>
       
