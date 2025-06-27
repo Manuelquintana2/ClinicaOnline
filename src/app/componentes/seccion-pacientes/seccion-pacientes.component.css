@@ -51,31 +51,39 @@
   transition: background-color 0.3s;
 }
 
-.btn-historia {
-  background-color: #17a2b8;
+.btn-admin:hover {
+  background-color: #0044ff;
   color: white;
 }
 
-.btn-admin:hover {
-  background-color: #0044ff;
+.btn-historia {
+  background-color: #17a2b8;
   color: white;
 }
 
 .text-celeste {
   color: #4193eb;
 }
+
 .card {
   transition: transform 0.2s ease;
   background-color: rgb(32, 33, 36);
 }
-.card .text-celeste {
-  color: #ffffff;
+.card-title {
+  color: #0d7de7;
+  font-weight: bold;
 }
-.card-text{
-  color: #ffffff;
-}
+
 .card:hover {
   transform: scale(1.01);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 
+.card .text-celeste,
+.card-text {
+  color: #ffffff;
+}
+p {
+  color: #ffffff;
+
+}

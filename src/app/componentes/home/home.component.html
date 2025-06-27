@@ -22,7 +22,7 @@
         <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/mis-turnos">Todos los turnos</button>
           <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin/seccion-usuarios">Graficos</button>
       <button *ngIf="perfil === 'especialista' || perfil === 'paciente'" class="btn home-btn" routerLink="/mis-turnos">Mis Turnos</button>
-      <button *ngIf="perfil === 'especialista'" class="btn home-btn" routerLink="/paciente/mis-turnos">Pacientes previos</button>
+      <button *ngIf="perfil === 'especialista'" class="btn home-btn" routerLink="/pacientes">Pacientes previos</button>
     </div>
   </div>
 </div>

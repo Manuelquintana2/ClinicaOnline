@@ -15,5 +15,6 @@ export const routes: Routes = [
     {path: 'mi-perfil', loadComponent: () => import('./componentes/mi-perfil/mi-perfil.component').then(m => m.MiPerfilComponent) },
     {path: 'solicitar-turno', loadComponent: () => import('./componentes/solicitar-turno/solicitar-turno.component').then(m => m.SolicitarTurnoComponent) },
     {path: 'mis-turnos', loadComponent: () => import('./componentes/mis-turnos/mis-turnos.component').then(m => m.MisTurnosComponent) },
+    {path: 'pacientes', loadComponent: () => import('./componentes/seccion-pacientes/seccion-pacientes.component').then(m => m.SeccionPacientesComponent) },
 
 ];

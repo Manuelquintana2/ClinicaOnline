@@ -1,76 +1,39 @@
 <div class="seccion-usuarios-container">
   <div class="seccion-usuarios-box">
-
-    <div class="mb-3 text-end">
-      <button class="btn btn-admin" routerLink="/home">Volver al home</button>
-    </div>
-    <div class="mb-3 text-end">
-      <button class="btn btn-admin" routerLink="/admin/registro-admin">Crear Administrador</button>
-    </div>
-    <div class="mb-3 text-end">
-      <button class="btn btn-admin" (click)="exportarUsuariosExcel()">Descargar Excel</button>
-    </div>
-    <div class="mb-3 text-end">
-      <button class="btn btn-admin" routerLink="/registro">Crear Usuario</button>
-    </div>
-
-    <h2 class="mb-4 text-celeste">Gestión de Usuarios</h2>
-
-    <div *ngIf="usuarios.length > 0; else noData">
-      <div class="row g-3">
-        <div class="col-md-6 col-lg-4" *ngFor="let usuario of usuarios">
-          <div class="card h-100">
+    <h2 class="text-center text-celeste">Pacientes atendidos</h2>
+    <div class="row g-3 mt-3" *ngIf="pacientesAtendidos.length > 0; else noData">
+        <div class="col-md-4" *ngFor="let item of pacientesAtendidos">
+        <div class="card h-100">
             <div class="card-header text-center">
-              <img
-                [src]="usuario.imagen_perfil || 'assets/default-profile.png'"
-                alt="Usuario"
-                class="rounded-circle"
-                style="width: 100px; height: 100px; object-fit: cover;"
-              />
+            <img [src]="item.paciente.imagen_perfil || 'assets/default-profile.png'"
+                class="rounded-circle" style="width: 100px; height: 100px;" />
             </div>
             <div class="card-body">
-              <h5 class="card-title text-celeste">{{ usuario.nombre }} {{ usuario.apellido }}</h5>
-              <p class="card-text"><strong>Email:</strong> {{ usuario.email }}</p>
-              <p class="card-text"><strong>Perfil:</strong> {{ usuario.perfil }}</p>
-              <p class="card-text">
-                <strong>Estado:</strong>
-                <span *ngIf="isEspecialista(usuario)">
-                  {{ usuario.esta_habilitado ? 'Habilitado' : 'Inhabilitado' }}
-                </span>
-                <span *ngIf="!isEspecialista(usuario)">
-                  N/A
-                </span>
-              </p>
+            <h5 class="card-title">{{ item.paciente.nombre }} {{ item.paciente.apellido }}</h5>
+            <p class="card-text"><strong>Email:</strong> {{ item.paciente.email }}</p>
+            <p class="card-text"><strong>DNI:</strong> {{ item.paciente.dni }}</p>
+            </div>
+            <div *ngIf="item.turnos.length > 0" class="mt-3 text-center">
+                <h6 class="text-celeste">Últimos turnos</h6>
+                <ul class="list-group list-group-flush">
+                <li *ngFor="let turno of item.turnos" class="list-group-item bg-dark text-white">
+                    <strong>Fecha:</strong> {{ turno.fecha | date:'mediumDate' }}<br>
+                    <strong>Especialidad:</strong> {{ turno.especialidad }}
+                </li>
+                </ul>
             </div>
             <div class="card-footer text-center">
-            <!-- Botón para especialista -->
-            <ng-container *ngIf="isEspecialista(usuario)">
-              <button
-                class="btn btn-sm"
-                [ngClass]="usuario.esta_habilitado ? 'btn-inhabilitar' : 'btn-habilitar'"
-                (click)="toggleHabilitacion(usuario)"
-              >
-                {{ usuario.esta_habilitado ? 'Inhabilitar' : 'Habilitar' }}
-              </button>
-            </ng-container>
-
-            <!-- Botón para paciente -->
-            <ng-container *ngIf="usuario.perfil === 'paciente'">
-                <button class="btn btn-info mt-2" (click)="verHistoria(usuario)" data-bs-toggle="modal" data-bs-target="#modalHistoriasClinicas">
-                  Ver historias clínicas
-                </button>
-            </ng-container>
-          </div>
-          </div>
+            <button class="btn btn-outline-primary btn-sm" (click)="verHistoria(item)" data-bs-toggle="modal" data-bs-target="#modalHistoriasClinicas">
+                Ver historia clínica
+            </button>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
-
-    <ng-template #noData>
-      <p class="text-center text-muted">No se encontraron usuarios.</p>
-    </ng-template>
-
-  </div>
+    </div>
+  <ng-template #noData>
+    <p class="text-center">No se encontraron pacientes con historia clínica.</p>
+  </ng-template>
 </div>
 <div class="modal fade" id="modalHistoriasClinicas" tabindex="-1" aria-labelledby="modalHistoriasClinicasLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">

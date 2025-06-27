@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../enviroment/enviroment';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Turno } from '../interface/users';
+import { Paciente, Turno, Usuario } from '../interface/users';
 
 @Injectable({
   providedIn: 'root'
@@ -219,4 +219,43 @@ async obtenerTurnosFinalizadosConHistoria(uid_paciente: string): Promise<Turno[]
       .update({ historia_clinica: historia }) // o 'historiaClinica', según tu modelo
       .eq('id', turnoId);
   }
+
+  async getPacientesAtendidosPorEspecialista(uidEspecialista: string): Promise<{ paciente: Paciente, turnos: Turno[] }[]> {
+    const { data: turnos, error } = await this.supabase
+      .from('turnos')
+      .select(`
+        *,
+        paciente:usuarios_clinica!uid_paciente(uid, nombre, apellido, email, dni, edad, obra_social, imagen_perfil)
+      `)
+      .eq('uid_especialista', uidEspecialista)
+      .not('historia_clinica', 'is', null)
+      .order('fecha', { ascending: false }); // Ordenamos por fecha descendente
+
+    if (error) {
+      console.error('Error al obtener pacientes atendidos:', error);
+      throw error;
+    }
+
+    // Agrupar por paciente y limitar a los últimos 3 turnos
+    const pacientesMap = new Map<string, { paciente: Paciente, turnos: Turno[] }>();
+
+    for (const turno of turnos) {
+      const uidPaciente = turno.uid_paciente;
+
+      if (!pacientesMap.has(uidPaciente)) {
+        pacientesMap.set(uidPaciente, {
+          paciente: turno.paciente,
+          turnos: [turno]
+        });
+      } else {
+        const entrada = pacientesMap.get(uidPaciente)!;
+        if (entrada.turnos.length < 3) {
+          entrada.turnos.push(turno);
+        }
+      }
+    }
+
+    return Array.from(pacientesMap.values());
+  }
+
 }
