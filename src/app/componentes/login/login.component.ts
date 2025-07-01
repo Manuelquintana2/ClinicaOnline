@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms'; 
 import { SpinnerComponent } from '../spinner/spinner.component';
+import { ValidacionInputDirective } from '../../directivas/validacion-input.directive';
 
 type Usuario = {
   email: string;
@@ -20,7 +21,7 @@ type GrupoUsuarios = {
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, RouterLink, SpinnerComponent],
+  imports: [CommonModule, FormsModule, RouterLink, SpinnerComponent,ValidacionInputDirective],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

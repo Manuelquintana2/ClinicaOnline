@@ -115,6 +115,13 @@
 .fab:hover {
   transform: scale(1.1);
 }
+.is-valid {
+  border: 2px solid #28a745; /* verde */
+}
+
+.is-invalid {
+  border: 2px solid #dc3545; /* rojo */ 
+}
 
 .fab-subgroup {
   display: flex;
