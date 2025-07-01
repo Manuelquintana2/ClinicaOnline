@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { Usuario } from '../../interface/users';
+import { BordeImagenDirective } from '../../directivas/borde-imagen.directive';
 
 @Component({
   selector: 'app-nav-bar',
-  imports: [RouterLinkActive, RouterLink, CommonModule,SpinnerComponent],
+  imports: [RouterLinkActive, RouterLink, CommonModule,SpinnerComponent, BordeImagenDirective],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.css'
 })

@@ -5,10 +5,11 @@ import { Usuario, Paciente,Especialista,Turno } from '../../interface/users';
 import { Modal } from 'bootstrap';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { CardEstiloDirective } from '../../directivas/app-card-estilo.directive';
 
 @Component({
   selector: 'app-seccion-pacientes',
-  imports: [CommonModule],
+  imports: [CommonModule,CardEstiloDirective],
   templateUrl: './seccion-pacientes.component.html',
   styleUrl: './seccion-pacientes.component.css'
 })

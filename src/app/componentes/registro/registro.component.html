@@ -155,7 +155,7 @@
           multiple
           >
             <option value="" disabled selected>Seleccione una especialidad</option>
-            <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+            <option *ngFor="let esp of especialidades" [value]="esp">{{ esp.nombre }}</option>
           </select>
         <div *ngIf="especialistaForm.get('especialidades')?.touched && especialistaForm.get('especialidades')?.invalid" class="text-danger small">La especialidad es requerida.</div>
 

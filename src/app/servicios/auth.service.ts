@@ -159,7 +159,12 @@ async getCurrentUser() {
 
     return data;
   }
-
+  async guardarInicioSesion(usuario: User) {
+    await this.supabase.from('log_ingresos').insert({
+    uid_usuario: usuario.id,
+    email: usuario.email,
+});
+  }
   async getAllUsers(): Promise<Usuario[]> {
     const { data, error } = await this.supabase
       .from('usuarios_clinica')

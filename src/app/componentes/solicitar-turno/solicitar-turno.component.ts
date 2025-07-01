@@ -1,22 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../servicios/auth.service';
-import { Especialista, Paciente, Turno, Usuario } from '../../interface/users';
+import { Especialidad, Especialista, Paciente, Turno, Usuario } from '../../interface/users';
 import Swal from 'sweetalert2';
 import { TurnoService } from '../../servicios/turno.service';
 import { EspecialidadesService } from '../../servicios/especialidades.service';
 import { Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { BordeImagenDirective } from '../../directivas/borde-imagen.directive';
+import { CardEstiloDirective } from '../../directivas/app-card-estilo.directive';
+
 
 @Component({
   selector: 'app-solicitar-turno',
   templateUrl: './solicitar-turno.component.html',
-  imports:[CommonModule, FormsModule],
+  imports:[CommonModule, FormsModule,BordeImagenDirective,CardEstiloDirective],
   styleUrls: ['./solicitar-turno.component.css']
 })
 export class SolicitarTurnoComponent implements OnInit {
 
-  especialidades: string[] = [];
+  especialidades: Especialidad[] = [];
   especialistas: Especialista[] = [];
   pacientes: Paciente[] = [];
   disponibilidades: any[] = [];

@@ -19,7 +19,7 @@
     <div *ngIf="usuarios.length > 0; else noData">
       <div class="row g-3">
         <div class="col-md-6 col-lg-4" *ngFor="let usuario of usuarios">
-          <div class="card h-100">
+          <div class="card h-100" appCardEstilo>
             <div class="card-header text-center">
               <img
                 [src]="usuario.imagen_perfil || 'assets/default-profile.png'"
@@ -58,6 +58,9 @@
             <ng-container *ngIf="usuario.perfil === 'paciente'">
                 <button class="btn btn-info mt-2" (click)="verHistoria(usuario)" data-bs-toggle="modal" data-bs-target="#modalHistoriasClinicas">
                   Ver historias clínicas
+                </button>
+                <button class="btn btn-success mt-2" (click)="exportarTurnosPacienteExcel(usuario)">
+                  Descargar turnos en Excel
                 </button>
             </ng-container>
           </div>

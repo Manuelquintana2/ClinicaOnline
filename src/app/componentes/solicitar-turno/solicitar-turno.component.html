@@ -4,7 +4,7 @@
   <div *ngIf="estadoActual === 'seleccionarPaciente'" class="con">
     <h2 class="section-title">Seleccionar Paciente</h2>
     <div class="card-grid">
-      <div *ngFor="let paciente of pacientes" class="card-item" (click)="onPacienteSeleccionado(paciente)">
+      <div *ngFor="let paciente of pacientes" class="card-item" appCardEstilo (click)="onPacienteSeleccionado(paciente)">
         <h3>{{ paciente.nombre }} {{ paciente.apellido }}</h3>
         <img src="{{paciente.imagen_perfil}}">
         <p>{{ paciente.email }}</p>
@@ -19,8 +19,22 @@
     </button>
     <h2 class="section-title">Seleccionar Especialidad</h2>
     <div class="card-grid">
-      <div *ngFor="let especialidad of especialidades" class="card-item" (click)="onEspecialidadSeleccionada(especialidad)">
-        <h3>{{ especialidad }}</h3>
+      <div *ngFor="let especialidad of especialidades" appCardEstilo class="card-item" (click)="onEspecialidadSeleccionada(especialidad.nombre)">
+        <img 
+          *ngIf="especialidad.imagen" 
+          [src]="especialidad.imagen" 
+          alt="Imagen de {{ especialidad.nombre }}" 
+          class="perfil-img-mini" 
+          [appBordeImagen]="'#4193eb'"
+        />
+       <img 
+          *ngIf="especialidad.imagen === null" 
+          [src]="'public/medico.png'" 
+          alt="Imagen de {{ especialidad.nombre }}" 
+          class="perfil-img-mini" 
+          [appBordeImagen]="'#4193eb'"
+        />
+        <h3>{{ especialidad.nombre }}</h3>
       </div>
     </div>
   </div>
@@ -32,13 +46,14 @@
   </button>
   <h2 class="section-title">Seleccionar Especialista</h2>
   <div class="card-grid">
-    <div *ngFor="let esp of especialistas" class="card-item" (click)="turno.uid_especialista = esp.uid!; onEspecialistaSeleccionado()">
+    <div appCardEstilo *ngFor="let esp of especialistas" class="card-item" (click)="turno.uid_especialista = esp.uid!; onEspecialistaSeleccionado()">
       
       <img 
         *ngIf="esp.imagen_perfil" 
         [src]="esp.imagen_perfil" 
         alt="Imagen de {{ esp.nombre }}" 
         class="perfil-img-mini" 
+        [appBordeImagen]="'#4193eb'"
       />
       
       <h3>{{ esp.nombre }} {{ esp.apellido }}</h3>

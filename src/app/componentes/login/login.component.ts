@@ -87,7 +87,10 @@ export class LoginComponent {
     this.errorMessage = null;
     try {
       const result = await this.auth.logIn(this.email, this.password);
-
+      if(result.success){
+        console.log('Inicio de sesión exitoso:', result.user);
+        this.auth.guardarInicioSesion(result.user!);
+      }
       if (!result.success) {
         switch (result.message) {
           case 'Email o contraseña incorrectos.':

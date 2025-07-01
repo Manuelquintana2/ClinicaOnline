@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { createClient } from '@supabase/supabase-js';
 import { environment } from '../../enviroment/enviroment';
+import { Especialidad } from '../interface/users';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +15,15 @@ export class EspecialidadesService {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
   }
 
-  async getEspecialidades(): Promise<string[]> {
-    const { data, error } = await this.supabase.from('especialidades').select('nombre');
+async getEspecialidades(): Promise<Especialidad[]> {
+  const { data, error } = await this.supabase
+    .from('especialidades')
+    .select('*');
 
-    if (error) throw error;
+  if (error) throw error;
 
-    return data.map((e: any) => e.nombre);
-  }
+  return data as Especialidad[];
+}
 
   async addEspecialidad(nombre: string): Promise<void> {
     const { error } = await this.supabase.from('especialidades').insert([{ nombre }]);

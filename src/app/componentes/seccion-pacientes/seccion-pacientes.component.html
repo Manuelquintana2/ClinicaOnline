@@ -3,7 +3,7 @@
     <h2 class="text-center text-celeste">Pacientes atendidos</h2>
     <div class="row g-3 mt-3" *ngIf="pacientesAtendidos.length > 0; else noData">
         <div class="col-md-4" *ngFor="let item of pacientesAtendidos">
-        <div class="card h-100">
+        <div class="card h-100" appCardEstilo>
             <div class="card-header text-center">
             <img [src]="item.paciente.imagen_perfil || 'assets/default-profile.png'"
                 class="rounded-circle" style="width: 100px; height: 100px;" />

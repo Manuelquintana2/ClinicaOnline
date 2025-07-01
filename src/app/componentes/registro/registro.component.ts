@@ -8,7 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import Swal from 'sweetalert2';
-import { Especialista,Paciente } from '../../interface/users';
+import { Especialidad, Especialista,Paciente } from '../../interface/users';
 import { AuthService } from '../../servicios/auth.service';
 import { v4 as uuidv4 } from 'uuid'; 
 import { EspecialidadesService } from '../../servicios/especialidades.service';
@@ -36,7 +36,7 @@ export class RegistroComponent implements OnInit{
   pacienteForm: FormGroup;
   especialistaForm: FormGroup;
 
-  especialidades!: string[];
+  especialidades!: Especialidad[];
 
   constructor(private fb: FormBuilder, 
     private auth: AuthService, 

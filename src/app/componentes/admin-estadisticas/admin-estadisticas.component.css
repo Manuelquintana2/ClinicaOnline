@@ -1,0 +1,13 @@
+canvas {
+  max-height: 300px !important;
+  width: 100% !important;
+}
+.estadisticas-container {
+  max-width: 1200px;
+  margin: auto;
+  background-color: #25204e;
+}
+
+.text-celeste {
+  color: #4193eb;
+}

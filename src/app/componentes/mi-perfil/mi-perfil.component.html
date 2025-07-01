@@ -9,12 +9,14 @@
           [src]="usuario.imagen_perfil"
           alt="Imagen de perfil"
           class="perfil-img"
+          [appBordeImagen]="'#4193eb'"
         />
         <img
           *ngIf="isPaciente(usuario)"
           [src]="usuario.imagen_perfil_aux"
           alt="Imagen auxiliar"
           class="perfil-img"
+          [appBordeImagen]="'#4193eb'" 
         />
       </div>
 
@@ -33,7 +35,18 @@
          <button class="btn btn-info mt-3" (click)="generarPDFHistoriaClinica(turnosConHistoria, usuario)">
           Descargar Historia Clínica en PDF
         </button>
+        <div class="mt-3">
+        <label for="especialidadFiltro" class="form-label text-white">Filtrar por especialidad:</label>
+        <select class="form-select mb-2" id="especialidadFiltro" [(ngModel)]="especialidadSeleccionada">
+          <option value="">-- Seleccionar especialidad --</option>
+          <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+        </select>
 
+        <button class="btn btn-success" [disabled]="!especialidadSeleccionada || turnosFiltradosPorEspecialidad.length === 0"
+                (click)="generarPDFHistoriaClinica(turnosFiltradosPorEspecialidad, usuario)">
+          Descargar PDF solo de {{ especialidadSeleccionada }}
+        </button>
+      </div>
       </ng-container>
       
 

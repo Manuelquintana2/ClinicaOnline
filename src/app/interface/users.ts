@@ -61,3 +61,7 @@ export interface HistoriaDatos {
     };
     dinamicos?: { [key: string]: string };
 }
+export interface Especialidad{
+  nombre: string;
+  imagen: string;
+}

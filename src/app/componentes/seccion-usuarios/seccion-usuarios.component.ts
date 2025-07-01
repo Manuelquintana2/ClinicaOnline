@@ -8,11 +8,12 @@ import * as FileSaver from 'file-saver';
 import { TurnoService } from '../../servicios/turno.service';
 import { ElementRef, ViewChild } from '@angular/core';
 import { Modal } from 'bootstrap'; // 👈 Asegurate que esté instalada la lib Bootstrap 5
+import { CardEstiloDirective } from '../../directivas/app-card-estilo.directive';
 
 
 @Component({
   selector: 'app-seccion-usuarios',
-  imports:[CommonModule, RouterLink,],
+  imports:[CommonModule, RouterLink,CardEstiloDirective],
   templateUrl: './seccion-usuarios.component.html',
   styleUrls: ['./seccion-usuarios.component.css'],
 })
@@ -119,4 +120,41 @@ export class SeccionUsuariosComponent implements OnInit {
   get mostrarAcciones(): boolean {
     return this.usuarios.some(u => u.perfil === 'especialista');
   }
+  exportarTurnosPacienteExcel(paciente: any) {
+  if (!this.turnosConHistoria || this.turnosConHistoria.length === 0) {
+    alert('Este paciente no tiene turnos con historia clínica para exportar.');
+    return;
+  }
+
+  const data = this.turnosConHistoria.map(turno => {
+    const historia = turno.historia_clinica;
+    const fijos = historia?.fijos || {};
+    const dinamicos = historia?.dinamicos || {};
+
+    const row: any = {
+      'Fecha': turno.fecha,
+      'Especialista': turno.nombre_especialista,
+      'Especialidad': turno.especialidad,
+      'Altura (cm)': historia?.fijos?.altura || '',
+      'Peso (kg)':  historia?.fijos?.peso || '',
+      'Temperatura (°C)':historia?.fijos?.temperatura || '',
+      'Presión (mmHg)': historia?.fijos?.presion || '',
+    };
+
+    // Agregamos datos dinámicos como columnas adicionales
+    Object.keys(dinamicos).forEach(key => {
+      row[key] = dinamicos[key];
+    });
+
+    return row;
+  });
+
+  const worksheet = XLSX.utils.json_to_sheet(data);
+  const workbook = { Sheets: { 'Turnos': worksheet }, SheetNames: ['Turnos'] };
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+
+  FileSaver.saveAs(blob, `Turnos_${paciente.apellido}_${paciente.nombre}.xlsx`);
+}
+
 }

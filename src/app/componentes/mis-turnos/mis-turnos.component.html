@@ -8,17 +8,25 @@
 
     <div *ngIf="cargando" class="text-center text-muted">Cargando...</div>
 
+    <div class="mb-3 text-center">
+      <input
+        type="text"
+        class="form-control w-50 mx-auto"
+        placeholder="Buscar por nombre o especialidad..."
+        [(ngModel)]="filtroTexto"
+    />
+    </div>
     <div *ngIf="!cargando && !turnos.length" class="text-center text-muted">
       No hay turnos para mostrar.
     </div>
 
      <div *ngIf="!cargando && turnos.length" class="d-flex flex-wrap gap-3 justify-content-center">
       <div
-        *ngFor="let turno of turnos"
+        *ngFor="let turno of turnos | filtroCompleto:filtroTexto : perfil!"
         class="card text-white bg-dark"
-        style="width: 320px;"
+        style="width: 320px;"appCardEstilo
       >
-        <div class="card-header d-flex align-items-center gap-3">
+        <div class="card-header d-flex align-items-center gap-3" >
           <img
             *ngIf="perfil === 'paciente'"
             [src]="turno.imagen_especialista || 'assets/default-profile.png'"

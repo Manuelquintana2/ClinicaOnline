@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { TurnoService } from '../../servicios/turno.service';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { BordeImagenDirective } from '../../directivas/borde-imagen.directive';
 
 declare module 'jspdf' {
   interface jsPDF {
@@ -18,7 +19,7 @@ declare module 'jspdf' {
 }
 @Component({
   selector: 'app-mi-perfil',
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule,FormsModule,BordeImagenDirective],
   templateUrl: './mi-perfil.component.html',
   styleUrl: './mi-perfil.component.css'
 })
@@ -26,6 +27,8 @@ declare module 'jspdf' {
 export class MiPerfilComponent {
   turnosConHistoria: Turno[] = [];
 
+  especialidades: string[] = [];
+  especialidadSeleccionada: string = '';
   perfil: string | null = null;
   cargando: boolean = true;
   private sub!: Subscription;
@@ -68,12 +71,17 @@ export class MiPerfilComponent {
         if (this.usuario?.uid && this.isPaciente(this.usuario)) {
           this.turnosConHistoria = await this.turnosService.obtenerTurnosFinalizadosConHistoria(this.usuario.uid);
           this.turnosConHistoria.forEach(t => (t.expandir = false));
+          this.especialidades = [...new Set(this.turnosConHistoria.map(t => t.especialidad))];
         }
       }
       console.log('Perfil cargado:', this.perfil);
     });
   }
 
+  get turnosFiltradosPorEspecialidad(): Turno[] {
+  if (!this.especialidadSeleccionada) return [];
+  return this.turnosConHistoria.filter(t => t.especialidad === this.especialidadSeleccionada);
+}
    generarPDFHistoriaClinica(turnos: Turno[], paciente: Paciente) {
     const doc = new jsPDF();
     const logo = new Image();

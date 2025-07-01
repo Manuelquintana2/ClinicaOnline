@@ -7,10 +7,12 @@ import { TurnoService } from '../../servicios/turno.service'; // Asegurate de qu
 import { Turno } from '../../interface/users'; // Si tenés un modelo
 import { FormsModule } from '@angular/forms';
 import * as bootstrap from 'bootstrap';
+import { FiltroCompletoPipe } from '../../pipes/filtro-completo.pipe';
+import { CardEstiloDirective } from '../../directivas/app-card-estilo.directive';
 
 @Component({
   selector: 'app-mis-turnos',
-  imports: [CommonModule,RouterLink,FormsModule],
+  imports: [CommonModule,RouterLink,FormsModule, FiltroCompletoPipe,CardEstiloDirective],
   templateUrl: './mis-turnos.component.html',
   styleUrl: './mis-turnos.component.css'
 })
@@ -26,6 +28,7 @@ export class MisTurnosComponent {
   peso! : number;
   temperatura! : number;
   presion! : number;
+  filtroTexto: string = '';
 
     // Modal control
   turnoSeleccionado: Turno | null = null;
