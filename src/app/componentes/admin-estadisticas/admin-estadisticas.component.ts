@@ -171,13 +171,16 @@ async filtrarPorFechas() {
 exportarEspecialidadPDF() {
   const doc = new jsPDF();
   doc.text('Turnos por Especialidad', 10, 10);
-  autoTable(doc, {
-    startY: 20,
-    head: [['Especialidad', 'Cantidad']],
-    body: this.turnosPorEspecialidad.map(t => [t.especialidad, t.cantidad])
-  });
+
+  const canvas = document.getElementById('especialidadChart') as HTMLCanvasElement;
+  const imgData = canvas.toDataURL('image/png');
+
+  // Agrega la imagen en el PDF
+  doc.addImage(imgData, 'PNG', 10, 20, 180, 100); // X, Y, width, height
+
   doc.save('turnos-por-especialidad.pdf');
 }
+
 
 exportarDiaExcel() {
   const ws = XLSX.utils.json_to_sheet(this.turnosPorDia);
@@ -189,13 +192,14 @@ exportarDiaExcel() {
 exportarDiaPDF() {
   const doc = new jsPDF();
   doc.text('Turnos por Día', 10, 10);
-  autoTable(doc, {
-    startY: 20,
-    head: [['Fecha', 'Cantidad']],
-    body: this.turnosPorDia.map(t => [t.fecha, t.cantidad])
-  });
+
+  const canvas = document.getElementById('diaChart') as HTMLCanvasElement;
+  const imgData = canvas.toDataURL('image/png');
+
+  doc.addImage(imgData, 'PNG', 10, 20, 180, 100);
   doc.save('turnos-por-dia.pdf');
 }
+
 
 exportarSolicitadosExcel() {
   const ws = XLSX.utils.json_to_sheet(this.turnosSolicitadosPorMedico);
@@ -207,13 +211,14 @@ exportarSolicitadosExcel() {
 exportarSolicitadosPDF() {
   const doc = new jsPDF();
   doc.text('Turnos Solicitados por Médico', 10, 10);
-  autoTable(doc, {
-    startY: 20,
-    head: [['Especialista', 'Cantidad']],
-    body: this.turnosSolicitadosPorMedico.map(t => [t.uid_especialista, t.cantidad])
-  });
+
+  const canvas = document.getElementById('solicitadosMedicoChart') as HTMLCanvasElement;
+  const imgData = canvas.toDataURL('image/png');
+
+  doc.addImage(imgData, 'PNG', 10, 20, 180, 100);
   doc.save('turnos-solicitados.pdf');
 }
+
 
 exportarFinalizadosExcel() {
   const ws = XLSX.utils.json_to_sheet(this.turnosFinalizadosPorMedico);
@@ -225,12 +230,13 @@ exportarFinalizadosExcel() {
 exportarFinalizadosPDF() {
   const doc = new jsPDF();
   doc.text('Turnos Finalizados por Médico', 10, 10);
-  autoTable(doc, {
-    startY: 20,
-    head: [['Especialista', 'Cantidad']],
-    body: this.turnosFinalizadosPorMedico.map(t => [t.uid_especialista, t.cantidad])
-  });
+
+  const canvas = document.getElementById('finalizadosMedicoChart') as HTMLCanvasElement;
+  const imgData = canvas.toDataURL('image/png');
+
+  doc.addImage(imgData, 'PNG', 10, 20, 180, 100);
   doc.save('turnos-finalizados.pdf');
 }
+
 
 }
