@@ -167,9 +167,10 @@ export class SolicitarTurnoComponent implements OnInit {
   private obtenerDiaSemanaSinDesfase(dateString: string): string {
     const dias = ['domingo','lunes', 'martes', 'miércoles', 'jueves', 'viernes','sábado'];
     const [year, month, day] = dateString.split('-').map(Number);
-    const date = new Date(year, month - 1, day);
-
-    return dias[date.getDay()];
+    
+    // Usar UTC para evitar problemas de zona horaria
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return dias[date.getUTCDay()];
   }
 
   private formatearFecha(fecha: Date): string {
@@ -197,10 +198,12 @@ export class SolicitarTurnoComponent implements OnInit {
     for (let i = 0; i < 15; i++) {
       const fecha = new Date();
       fecha.setDate(hoy.getDate() + i);
-      const diaNombre = this.obtenerDiaSemanaSinDesfase(fecha.toISOString().split('T')[0]);
+      
+      // Generar fecha ISO de manera consistente
+      const fechaISO = `${fecha.getFullYear()}-${(fecha.getMonth() + 1).toString().padStart(2, '0')}-${fecha.getDate().toString().padStart(2, '0')}`;
+      const diaNombre = this.obtenerDiaSemanaSinDesfase(fechaISO);
 
       if (diasDisponibles.includes(diaNombre)) {
-        const fechaISO = `${fecha.getFullYear()}-${(fecha.getMonth() + 1).toString().padStart(2, '0')}-${fecha.getDate().toString().padStart(2, '0')}`;
         const fechaFormateada = this.formatearFecha(fecha);
         this.fechasDisponibles.push(`${fechaISO}|${fechaFormateada}`);
       }

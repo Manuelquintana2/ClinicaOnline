@@ -101,8 +101,10 @@ export class TurnoService {
   obtenerDiaSemanaSinDesfase(fecha: string): string {
     const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sabado'];
     const [year, month, day] = fecha.split('-').map(Number);
-    const date = new Date(year, month - 1, day); // construye en hora local
-    return dias[date.getDay()];
+    
+    // Usar UTC para evitar problemas de zona horaria
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return dias[date.getUTCDay()];
   }
 
   async obtenerTurnosPaciente(uid: string): Promise<Turno[]> {
