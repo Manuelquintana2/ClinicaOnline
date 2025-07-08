@@ -17,10 +17,10 @@
   <!-- NUEVA SECCIÓN PARA PACIENTES -->
   <div *ngIf="perfil != null" class="mt-5 con">
     <h2 class="home-subtitle">Consultas Médicas</h2>
-    <div class="d-flex justify-content-center gap-3 mt-3">
+    <div class="consultas-buttons mt-3">
       <button *ngIf="perfil === 'admin' || perfil === 'paciente'" class="btn home-btn" routerLink="/solicitar-turno">Solicitar Turno</button>
-        <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/mis-turnos">Todos los turnos</button>
-          <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin-estadisticas">Graficos</button>
+      <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/mis-turnos">Todos los turnos</button>
+      <button *ngIf="perfil === 'admin'" class="btn home-btn" routerLink="/admin-estadisticas">Graficos</button>
       <button *ngIf="perfil === 'especialista' || perfil === 'paciente'" class="btn home-btn" routerLink="/mis-turnos">Mis Turnos</button>
       <button *ngIf="perfil === 'especialista'" class="btn home-btn" routerLink="/pacientes">Pacientes previos</button>
     </div>

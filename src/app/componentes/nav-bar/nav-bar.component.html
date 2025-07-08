@@ -5,20 +5,6 @@
       class="navbar-brand btn btn-link p-0 clinic-brand">
       Clinica Online
     </h2>
-
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
       <ul class="navbar-nav ms-0 mb-2 mb-lg-0 d-flex align-items-center">
         <li class="nav-item me-2">
           <button *ngIf="!isLoggedIn" class="btn btn-login" routerLink="/login" routerLinkActive="active">
@@ -48,7 +34,6 @@
           </button>
         </li>
       </ul>
-    </div>
   </div>
 </nav>
 <div class="navbar-separator"></div>

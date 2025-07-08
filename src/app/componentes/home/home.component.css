@@ -103,3 +103,16 @@
   transform: scale(1.1);
   cursor: pointer;
 }
+
+.consultas-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.consultas-buttons .home-btn {
+  flex: 1 1 200px; /* los botones crecen pero tienen un mínimo */
+  max-width: 250px;
+  text-align: center;
+}
