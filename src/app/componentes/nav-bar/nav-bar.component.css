@@ -22,8 +22,8 @@
   padding: 0.675rem 0.75rem;
   border-radius: 0.25rem;
   transition: background-color 0.3s, color 0.3s;
+  margin-right: 0.5rem;
 }
-
 
 .btn-login:hover {
   background-color: #0044ff;
@@ -60,6 +60,23 @@
   background-color: #0044ff;
   color: white;
   cursor: pointer;
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 768px) {
+  .navbar-nav .nav-item {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .btn-login, .btn-register {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.6rem;
+  }
+  
+  .clinic-brand {
+    font-size: 2rem;
+  }
 }
 
 /* Cambiar color del ícono hamburguesa */

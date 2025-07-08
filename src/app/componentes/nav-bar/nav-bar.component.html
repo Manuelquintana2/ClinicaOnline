@@ -6,14 +6,11 @@
       Clinica Online
     </h2>
       <ul class="navbar-nav ms-0 mb-2 mb-lg-0 d-flex align-items-center">
-        <li class="nav-item me-2">
-          <button *ngIf="!isLoggedIn" class="btn btn-login" routerLink="/login" routerLinkActive="active">
+        <li class="nav-item d-flex align-items-center me-3" *ngIf="!isLoggedIn">
+          <button class="btn btn-login" routerLink="/login" routerLinkActive="active">
             Iniciar Sesión
           </button>
-        </li>
-
-        <li class="nav-item me-2">
-          <button *ngIf="!isLoggedIn" class="btn btn-register" routerLink="/registro" routerLinkActive="active">
+          <button class="btn btn-register" routerLink="/registro" routerLinkActive="active">
             Registrarse
           </button>
         </li>
