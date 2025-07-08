@@ -27,6 +27,21 @@
     0 0 20px 8px rgba(65, 147, 235, 0.5);
 }
 
+.botones-superiores {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.botones-izquierda,
+.botones-derecha {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 .btn-habilitar {
   color: white;
   background-color: #28a745;
@@ -49,6 +64,10 @@
   color: white;
   font-weight: 600;
   transition: background-color 0.3s;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  white-space: nowrap;
 }
 
 .btn-historia {
@@ -59,23 +78,48 @@
 .btn-admin:hover {
   background-color: #0044ff;
   color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .text-celeste {
   color: #4193eb;
 }
+
 .card {
   transition: transform 0.2s ease;
   background-color: rgb(32, 33, 36);
 }
+
 .card .text-celeste {
   color: #ffffff;
 }
+
 .card-text{
   color: #ffffff;
 }
+
 .card:hover {
   transform: scale(1.01);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive design para móviles */
+@media (max-width: 768px) {
+  .botones-superiores {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .botones-izquierda,
+  .botones-derecha {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .btn-admin {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
 }
 

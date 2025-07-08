@@ -1,20 +1,18 @@
 <div class="seccion-usuarios-container">
   <div class="seccion-usuarios-box">
 
-    <div class="mb-3 text-end">
-      <button class="btn btn-admin" routerLink="/home">Volver al home</button>
-    </div>
-    <div class="mb-3 text-end">
-      <button class="btn btn-admin" routerLink="/admin/registro-admin">Crear Administrador</button>
-    </div>
-    <div class="mb-3 text-end">
-      <button class="btn btn-admin" (click)="exportarUsuariosExcel()">Descargar Excel</button>
-    </div>
-    <div class="mb-3 text-end">
-      <button class="btn btn-admin" routerLink="/registro">Crear Usuario</button>
+    <div class="botones-superiores">
+      <div class="botones-izquierda">
+        <button class="btn btn-admin" routerLink="/home">Volver al home</button>
+        <button class="btn btn-admin" routerLink="/admin/registro-admin">Crear Administrador</button>
+      </div>
+      <div class="botones-derecha">
+        <button class="btn btn-admin" (click)="exportarUsuariosExcel()">Descargar Excel</button>
+        <button class="btn btn-admin" routerLink="/registro">Crear Usuario</button>
+      </div>
     </div>
 
-    <h2 class="mb-4 text-celeste">Gestión de Usuarios</h2>
+    <h2 class="mb-4 text-celeste text-center">Gestión de Usuarios</h2>
 
     <div *ngIf="usuarios.length > 0; else noData">
       <div class="row g-3">
